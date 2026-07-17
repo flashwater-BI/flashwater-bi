@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlashWater 运营BI看板</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Glass surfaces */
+  --glass-bg: rgba(255,255,255,.35);
+  --glass-hover: rgba(255,255,255,.55);
+  --glass-border: rgba(255,255,255,.6);
+  --glass-border-soft: rgba(255,255,255,.35);
+  --glass-shadow: 0 8px 32px rgba(31,38,135,.08);
+  --glass-shadow-lg: 0 16px 48px rgba(31,38,135,.12);
+  
+  /* Colors */
+  --text: #1a1a2e;
+  --text2: #5b6c84;
+  --text3: #8e9bb4;
+  --blue: #3b6df0;
+  --blue-glow: rgba(59,109,240,.15);
+  --green: #10b981;
+  --green-glow: rgba(16,185,129,.12);
+  --amber: #f59e0b;
+  --amber-glow: rgba(245,158,11,.12);
+  --red: #ef4444;
+  --red-glow: rgba(239,68,68,.1);
+  --purple: #8b5cf6;
+  --purple-glow: rgba(139,92,246,.12);
+  --teal: #14b8a6;
+  
+  /* Layout */
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(ellipse 900px 700px at 10% 5%, rgba(120,160,240,.4), transparent 55%),
+    radial-gradient(ellipse 800px 600px at 90% 15%, rgba(100,150,230,.35), transparent 55%),
+    radial-gradient(ellipse 1000px 800px at 50% 50%, rgba(140,180,240,.3), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 85% 80%, rgba(180,160,230,.3), transparent 55%),
+    radial-gradient(ellipse 700px 500px at 15% 85%, rgba(120,160,220,.35), transparent 55%),
+    linear-gradient(170deg, #eef2fb 0%, #e4eaf6 30%, #eceff8 60%, #e8edf9 100%);
+  background-attachment: fixed;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 300;
+  background: rgba(255,255,255,.4);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 8px 0;
+}
+.topbar-inner { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
+.topbar-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.topbar-row + .topbar-row { margin-top: 8px; }
+
+.topbar-logo {
+  font-size: 19px; font-weight: 800; letter-spacing: -.3px;
+  background: linear-gradient(135deg, var(--blue), #6d8ff0);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Date display */
+.date-range-display {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; font-size: 13px; font-weight: 600;
+  background: var(--glass-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xs); color: var(--text);
+  backdrop-filter: blur(12px); white-space: nowrap;
+  min-width: 180px; justify-content: center;
+}
+.date-range-display .date-icon { font-size: 14px; opacity: .6; }
+
+.filter-group { display: flex; align-items: center; gap: 5px; }
+.filter-btn {
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--radius-xs); background: var(--glass-bg);
+  color: var(--text2); cursor: pointer; white-space: nowrap;
+  transition: all .2s; font-family: inherit; backdrop-filter: blur(12px);
+}
+.filter-btn:hover { background: var(--glass-hover); color: var(--text); }
+.filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); box-shadow: 0 2px 12px var(--blue-glow); }
+
+.date-input {
+  padding: 6px 10px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--glass-border-soft);
+  border-radius: var(--radius-xs); background: var(--glass-bg);
+  color: var(--text); outline: none; font-family: inherit;
+  backdrop-filter: blur(12px); cursor: pointer;
+}
+.date-input:focus { border-color: var(--blue); }
+
+.btn-query {
+  padding: 6px 16px; font-size: 12px; font-weight: 700;
+  border: none; border-radius: var(--radius-xs);
+  background: var(--blue); color: #fff; cursor: pointer;
+  transition: all .2s; font-family: inherit;
+  box-shadow: 0 2px 12px var(--blue-glow);
+}
+.btn-query:hover { background: #4f80f5; transform: translateY(-1px); }
+
+.topbar-spacer { flex: 1; min-width: 8px; }
+
+.toggle-wrap { display: flex; align-items: center; gap: 6px; }
+.toggle-label { font-size: 11px; font-weight: 600; color: var(--text2); white-space: nowrap; }
+.toggle {
+  position: relative; width: 38px; height: 22px; cursor: pointer;
+}
+.toggle input { display: none; }
+.toggle-slider {
+  position: absolute; inset: 0; background: #c8d2e0; border-radius: 11px; transition: .3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px;
+  background: #fff; border-radius: 50%; transition: .3s; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.toggle input:checked + .toggle-slider { background: var(--blue); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+/* Dimension tabs */
+.dim-tabs {
+  display: flex; gap: 0; background: rgba(200,210,230,.2); border-radius: 10px; padding: 3px;
+  backdrop-filter: blur(12px);
+}
+.dim-tab {
+  padding: 8px 22px; font-size: 13px; font-weight: 700; cursor: pointer;
+  border-radius: 8px; color: var(--text2); transition: all .25s;
+  border: none; background: transparent; font-family: inherit; position: relative;
+  letter-spacing: -.2px;
+}
+.dim-tab:hover { color: var(--text); background: rgba(255,255,255,.45); }
+.dim-tab.active { background: var(--blue); color: #fff; box-shadow: 0 4px 16px var(--blue-glow); }
+.dim-tab .dim-badge {
+  display: inline-block; font-size: 9px; font-weight: 600; margin-left: 4px;
+  padding: 0 5px; border-radius: 4px; background: rgba(255,255,255,.2);
+  letter-spacing: .3px;
+}
+
+/* Side panel buttons */
+.side-btn {
+  padding: 6px 14px; font-size: 12px; font-weight: 700;
+  border: 1px solid var(--glass-border); border-radius: var(--radius-xs);
+  background: var(--glass-bg); color: var(--text2);
+  cursor: pointer; white-space: nowrap; transition: all .2s; font-family: inherit;
+  backdrop-filter: blur(12px);
+}
+.side-btn:hover { background: var(--glass-hover); color: var(--text); }
+.side-btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  box-shadow: var(--glass-shadow);
+  transition: all .3s;
+}
+.card:hover { box-shadow: var(--glass-shadow-lg); }
+
+.section-title {
+  font-size: 15px; font-weight: 800; color: var(--text);
+  margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+  letter-spacing: -.2px;
+}
+.section-title::before {
+  content: ''; display: inline-block; width: 4px; height: 18px; border-radius: 2px;
+  background: var(--blue);
+}
+.section-title.green::before { background: var(--green); }
+.section-title.amber::before { background: var(--amber); }
+.section-title.purple::before { background: var(--purple); }
+
+.main-wrap {
+  max-width: 1320px; margin: 0 auto; padding: 0 28px 48px;
+  position: relative; z-index: 1;
+}
+
+/* ===== SIDE PANEL OVERLAY ===== */
+.side-panel-overlay {
+  display: none; position: fixed; inset: 0; z-index: 900;
+  background: rgba(0,0,0,.25); backdrop-filter: blur(4px);
+  transition: opacity .3s;
+}
+.side-panel-overlay.show { display: block; }
+
+.side-panel {
+  position: fixed; top: 0; right: -520px; width: 480px; height: 100vh; z-index: 1000;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -8px 0 40px rgba(0,0,0,.12);
+  transition: right .35s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto; padding: 32px 28px;
+}
+.side-panel.show { right: 0; }
+
+.side-panel h2 {
+  font-size: 20px; font-weight: 800; margin-bottom: 24px; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between;
+  letter-spacing: -.3px;
+}
+.side-panel .close-btn {
+  width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,.5); cursor: pointer; display: flex;
+  align-items: center; justify-content: center; font-size: 16px; color: var(--text2);
+  transition: all .2s;
+}
+.side-panel .close-btn:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+.side-panel h3 { font-size: 14px; font-weight: 700; margin: 20px 0 10px; color: var(--text); }
+.side-panel .form-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: end; }
+.side-panel .form-col { flex: 1; }
+.side-panel label { display: block; font-size: 11px; font-weight: 700; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+.side-panel input, .side-panel select {
+  width: 100%; padding: 9px 12px; font-size: 13px; border: 1px solid rgba(200,210,230,.5);
+  border-radius: 10px; outline: none; font-family: inherit;
+  background: rgba(255,255,255,.6); backdrop-filter: blur(8px);
+}
+.side-panel input:focus, .side-panel select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-glow); }
+.side-panel .btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.side-panel .btn-primary {
+  padding: 10px 24px; font-size: 13px; font-weight: 700; color: #fff;
+  background: var(--blue); border: none; border-radius: 10px; cursor: pointer;
+  box-shadow: 0 2px 12px var(--blue-glow); transition: all .2s;
+}
+.side-panel .btn-primary:hover { background: #4f80f5; transform: translateY(-1px); }
+.side-panel .btn-secondary {
+  padding: 10px 24px; font-size: 13px; font-weight: 600; color: var(--text2);
+  background: rgba(240,242,248,.8); border: 1px solid var(--glass-border);
+  border-radius: 10px; cursor: pointer; font-family: inherit;
+}
+.side-panel .btn-danger {
+  padding: 4px 10px; font-size: 11px; color: var(--red); font-weight: 600;
+  background: transparent; border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+}
+.side-panel .btn-danger:hover { background: var(--red-glow); border-color: var(--red); }
+.side-panel .target-list { margin-top: 14px; }
+.side-panel .target-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; font-size: 12px; border-bottom: 1px solid rgba(200,210,230,.3);
+}
+.side-panel .target-item .shop { font-weight: 700; min-width: 50px; }
+.side-panel .target-item .month { color: var(--text3); min-width: 60px; font-size: 11px; }
+.side-panel .target-item .val { color: var(--blue); font-weight: 700; min-width: 90px; }
+.side-panel .target-item .orders { color: var(--text2); min-width: 50px; font-size: 11px; }
+
+/* Calc panel specific */
+.side-panel .calc-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 8px 0; }
+.side-panel .calc-table th { text-align: left; font-weight: 700; font-size: 10px; padding: 7px 8px; background: rgba(240,242,248,.6); border-bottom: 2px solid var(--glass-border); text-transform: uppercase; letter-spacing: .5px; }
+.side-panel .calc-table td { padding: 7px 8px; border-bottom: 1px solid rgba(200,210,230,.3); line-height: 1.5; }
+.side-panel .calc-table .dim-col { font-weight: 700; color: var(--blue); white-space: nowrap; font-size: 11px; }
+.side-panel .calc-table .field { font-family: 'SF Mono','Consolas',monospace; font-size: 10px; color: var(--amber); background: rgba(245,158,11,.1); padding: 1px 4px; border-radius: 3px; }
+.side-panel .calc-table .note { font-size: 10px; color: var(--text3); }
+.side-panel .calc-desc { font-size: 12px; color: var(--text2); line-height: 1.8; margin: 0 0 14px; }
+
+/* Wide panel variant for calc panel */
+.side-panel.wide { width: 520px; right: -540px; }
+.side-panel.wide.show { right: 0; }
+
+/* ===== KPI Grid ===== */
+.kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-bottom: 22px; }
+.kpi-card { text-align: left; position: relative; overflow: hidden; }
+.kpi-card.primary { border-left: 4px solid var(--blue); padding-left: 24px; }
+.kpi-card.primary::after {
+  content: ''; position: absolute; top: -20px; right: -20px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--blue-glow); opacity: .5;
+}
+.kpi-label { font-size: 10.5px; color: var(--text3); font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .8px; }
+.kpi-value { font-size: 22px; font-weight: 900; color: var(--text); line-height: 1.1; letter-spacing: -.5px; }
+.kpi-value.lg { font-size: 28px; }
+.kpi-unit { font-size: 11px; font-weight: 600; color: var(--text3); margin-left: 3px; }
+.kpi-sub { margin-top: 4px; font-size: 10px; color: var(--text3); }
+.kpi-cmp {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10.5px; font-weight: 700; margin-top: 5px;
+  padding: 2px 8px; border-radius: 5px;
+}
+.kpi-cmp.up { color: #059669; background: var(--green-glow); }
+.kpi-cmp.down { color: #dc2626; background: var(--red-glow); }
+.kpi-cmp.flat { color: var(--text3); background: rgba(140,154,176,.1); }
+.kpi-cmp-tag { font-size: 9px; font-weight: 600; color: var(--text3); margin-left: 3px; }
+
+/* ===== Pressure Gauge ===== */
+.pressure-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.pressure-card {
+  text-align: center; padding: 20px 16px; position: relative;
+  border-radius: var(--radius-sm); background: rgba(255,255,255,.25);
+  border: 1px solid var(--glass-border-soft);
+  backdrop-filter: blur(12px);
+}
+.pressure-card.total { background: rgba(59,109,240,.06); border-color: rgba(59,109,240,.2); }
+.pressure-label { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 10px; letter-spacing: -.2px; }
+.pressure-gauge { position: relative; width: 100px; height: 100px; margin: 0 auto 12px; }
+.pressure-gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.pressure-center { position: absolute; inset: 12px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.pressure-pct { font-size: 20px; font-weight: 900; line-height: 1; letter-spacing: -.5px; }
+.pressure-status { font-size: 9px; font-weight: 700; margin-top: 3px; }
+.pressure-detail { font-size: 11px; color: var(--text3); margin-top: 5px; line-height: 1.6; font-weight: 500; }
+.target-edit-btn {
+  position: absolute; top: 8px; right: 10px;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1px solid var(--glass-border); background: rgba(255,255,255,.6);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: var(--text3); transition: .2s; backdrop-filter: blur(8px);
+}
+.target-edit-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+/* ===== Grids ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 22px; }
+.grid-21 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 22px; }
+
+/* ===== Chart ===== */
+.chart-wrap { position: relative; width: 100%; }
+.chart-wrap.h2 { aspect-ratio: 2/1; min-height: 220px; }
+.chart-wrap.h15 { aspect-ratio: 3/2; min-height: 200px; }
+.chart-wrap.sq { aspect-ratio: 1/1; min-height: 180px; max-height: 300px; }
+
+/* ===== Table ===== */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  text-align: left; font-weight: 700; color: var(--text2); font-size: 10px;
+  padding: 8px 10px; border-bottom: 1px solid var(--glass-border-soft);
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.data-table td { padding: 9px 10px; border-bottom: 1px solid var(--glass-border-soft); color: var(--text); font-weight: 500; }
+.data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.data-table .total-row { background: rgba(59,109,240,.06); font-weight: 700; }
+.data-table .total-row td { border-top: 2px solid var(--blue); }
+.data-table .good { color: var(--green); font-weight: 700; }
+.data-table .warn { color: var(--amber); font-weight: 700; }
+
+.product-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.product-table th { font-weight: 700; color: var(--text2); font-size: 10px; padding: 7px 8px; border-bottom: 1px solid var(--glass-border-soft); text-transform: uppercase; letter-spacing: .5px; }
+.product-table td { padding: 8px 8px; border-bottom: 1px solid var(--glass-border-soft); }
+.product-table .num { text-align: right; }
+
+.footer {
+  text-align: center; padding: 20px 0 8px; font-size: 10px; color: var(--text3);
+  font-weight: 500; letter-spacing: .2px;
+}
+
+/* Toast */
+.toast {
+  position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 2000;
+  padding: 10px 24px; border-radius: 12px; font-size: 13px; font-weight: 700;
+  color: #fff; background: var(--blue); box-shadow: 0 8px 28px var(--blue-glow);
+  animation: toastIn .3s ease; backdrop-filter: blur(12px);
+}
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-12px); } }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .grid-2, .grid-21 { grid-template-columns: 1fr; }
+  .pressure-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .pressure-grid { grid-template-columns: 1fr 1fr; }
+  .topbar-row { gap: 5px; }
+  .filter-btn { padding: 5px 8px; font-size: 10px; }
+  .date-range-display { min-width: 130px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="topbar-inner">
+
+  <!-- Row 1: Logo + Presets + Date display + Query -->
+  <div class="topbar-row">
+    <span class="topbar-logo">FlashWater BI</span>
+    
+    <div class="filter-group" id="timePresets">
+      <button class="filter-btn" data-preset="today">当日</button>
+      <button class="filter-btn" data-preset="yesterday">昨天</button>
+      <button class="filter-btn" data-preset="7d">近7天</button>
+      <button class="filter-btn" data-preset="30d">近30天</button>
+      <button class="filter-btn active" data-preset="this_month">本月</button>
+      <button class="filter-btn" data-preset="last_month">上月</button>
+    </div>
+    
+    <!-- Period mode + value -->
+    <select class="date-input" id="periodMode" onchange="onPeriodModeChange()" style="min-width:72px;">
+      <option value="month">自然月</option>
+      <option value="week">自然周</option>
+    </select>
+    <select class="date-input" id="periodValue" onchange="onPeriodValueChange()" style="min-width:80px;">
+      <option value="">---</option>
+    </select>
+    
+    <!-- Date range display + custom picker -->
+    <div class="date-range-display" id="dateRangeDisplay" title="当前日期范围">
+      <span class="date-icon">📅</span>
+      <span id="dateRangeText">2026-07-01 ~ 2026-07-17</span>
+    </div>
+    
+    <input type="date" class="date-input" id="dateFrom" title="开始日期" style="display:none;">
+    <input type="date" class="date-input" id="dateTo" title="结束日期" style="display:none;">
+    
+    <button class="btn-query" id="btnQuery" onclick="toggleCustomRange()">自定义</button>
+    
+    <span class="topbar-spacer"></span>
+    
+    <div class="toggle-wrap">
+      <span class="toggle-label">含BD</span>
+      <label class="toggle">
+        <input type="checkbox" id="bdToggle" checked onchange="refreshAll()">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    
+    <button class="side-btn primary" onclick="openTargetPanel()">📊 目标配置</button>
+    <button class="side-btn" onclick="openCalcPanel()">📋 逻辑说明</button>
+  </div>
+  
+  <!-- Row 2: Dimension Tabs -->
+  <div class="topbar-row">
+    <div class="dim-tabs" id="dimTabs">
+      <button class="dim-tab" data-dim="payment">
+        付款<span class="dim-badge">PAY</span>
+      </button>
+      <button class="dim-tab active" data-dim="net_sales">
+        净销售<span class="dim-badge">★</span>
+      </button>
+      <button class="dim-tab" data-dim="shipping">
+        出库<span class="dim-badge">SEND</span>
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VERSION NOTICE -->
+<div style="max-width:1320px;margin:0 auto;padding:6px 28px 0;">
+  <div style="
+    background: rgba(59,109,240,.06);
+    border: 1px solid rgba(59,109,240,.18);
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+    backdrop-filter: blur(12px);
+  ">
+    🔔 当前为<strong style="color:var(--blue);">V1版本</strong>，数据T+1更新，由于部分取数口径不同，可能存在与万里牛系统和历史报表略微差异，如有疑问联系<strong style="color:var(--blue);">@汪志坚</strong>处理~
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpiRow"></div>
+
+  <!-- Target Progress -->
+  <div class="card" style="margin-bottom:22px;">
+    <div class="section-title green">目标完成进度</div>
+    <div id="targetProgress"></div>
+  </div>
+
+  <!-- Platform Donut + Daily Trend row -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title amber">平台占比</div>
+      <div class="chart-wrap sq"><canvas id="platformDonutChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-title" id="trendTitle">日净销售趋势</div>
+      <div class="chart-wrap h2"><canvas id="dailyChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Platform Table + Margin Chart -->
+  <div class="grid-21">
+    <div class="card">
+      <div class="section-title amber">平台对比明细</div>
+      <table class="data-table" id="platformTable"></table>
+    </div>
+    <div class="card">
+      <div class="section-title purple">毛利率拆解</div>
+      <div class="chart-wrap h15"><canvas id="marginChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Product Ranking -->
+  <div class="card" style="margin-bottom:22px;">
+    <div class="section-title" id="productRankTitle">商品排行</div>
+    <table class="product-table" id="productTable"></table>
+  </div>
+
+  <!-- Inventory -->
+  <div class="card" style="margin-bottom:22px;" id="invCard">
+    <div class="section-title green">库存分析（万里牛实时库存）</div>
+    <div id="inventoryContent"></div>
+  </div>
+
+  <!-- Product Dimension -->
+  <div class="card" style="margin-bottom:22px;" id="prodDimCard">
+    <div class="section-title purple">商品全维度（成本×销售×库存）</div>
+    <div id="productDimContent"></div>
+  </div>
+
+  <!-- Logistics -->
+  <div class="card" style="margin-bottom:22px;" id="logCard">
+    <div class="section-title amber">物流分析</div>
+    <div class="grid-2" style="margin-bottom:0;">
+      <div>
+        <strong style="font-size:12px;color:var(--text2);">快递公司分布</strong>
+        <div class="chart-wrap h15" style="margin-top:10px;"><canvas id="carrierChart"></canvas></div>
+      </div>
+      <div>
+        <strong style="font-size:12px;color:var(--text2);">收货省份TOP10</strong>
+        <table class="data-table" id="provinceTable" style="margin-top:10px;"></table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    FlashWater 运营BI看板 · 数据刷新于 <span id="dataDate"></span> · 
+    成本=净销售>0订单商品成本(排除全额退款) · <span id="bdStatus"></span>
+  </div>
+</div>
+
+<!-- ===== SIDE PANEL: Target Config ===== -->
+<div class="side-panel-overlay" id="targetPanelOverlay"></div>
+<div class="side-panel" id="targetPanel">
+  <h2>📊 目标配置
+    <button class="close-btn" onclick="closeTargetPanel()">✕</button>
+  </h2>
+  
+  <div class="form-row">
+    <div class="form-col">
+      <label>店铺</label>
+      <select id="targetShop">
+        <option value="天猫">天猫</option>
+        <option value="抖店">抖店</option>
+        <option value="小红书">小红书</option>
+      </select>
+    </div>
+    <div class="form-col">
+      <label>年月</label>
+      <input type="month" id="targetMonth">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-col">
+      <label>销售目标（元）</label>
+      <input type="number" id="targetAmount" placeholder="例如：50000">
+    </div>
+    <div class="form-col">
+      <label>订单目标（单）</label>
+      <input type="number" id="targetOrders" placeholder="例如：200">
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="closeTargetPanel()">取消</button>
+    <button class="btn-primary" onclick="saveTarget()">保存目标</button>
+  </div>
+  
+  <div id="targetListSection" style="display:none;">
+    <h3>已有目标 <span style="font-size:10px;color:var(--text3);font-weight:500;">（点击删除）</span></h3>
+    <div class="target-list" id="targetList"></div>
+  </div>
+</div>
+
+<!-- ===== SIDE PANEL: Calc Logic ===== -->
+<div class="side-panel-overlay" id="calcPanelOverlay"></div>
+<div class="side-panel wide" id="calcPanel">
+  <h2>📋 取数逻辑说明
+    <button class="close-btn" onclick="closeCalcPanel()">✕</button>
+  </h2>
+  
+  <h3>三个数据维度</h3>
+  <table class="calc-table">
+    <thead><tr>
+      <th>维度</th><th>时间归属</th><th>销售额取值</th><th>订单计数</th><th>场景</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td class="dim-col">付款</td>
+        <td>按 <span class="field">pay_time</span></td>
+        <td><span class="field">payment_amount</span></td>
+        <td>全部订单</td>
+        <td class="note">日常运营</td>
+      </tr>
+      <tr>
+        <td class="dim-col">净销售 ★</td>
+        <td>按 <span class="field">pay_time</span></td>
+        <td><span class="field">net_sales = payment - refund</span></td>
+        <td><span class="field">net_sales>0</span></td>
+        <td class="note">含退款冲减后的真实收入</td>
+      </tr>
+      <tr>
+        <td class="dim-col">出库</td>
+        <td>按 <span class="field">send_time</span></td>
+        <td><span class="field">payment_amount</span></td>
+        <td>已发货订单</td>
+        <td class="note">物流/库存视角</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>成本核算</h3>
+  <p class="calc-desc">
+    <strong>仅计算净销售>0的订单成本</strong>（全额退款订单排除，商品退回不计成本）<br>
+    单订单成本 = Σ(商品数量 × 单位成本)，含赠品（赠品实际出库成本）<br>
+    取值优先级：<span class="field">order_items.unit_cost</span> → <span class="field">product_cost.unit_cost</span>（兜底）
+  </p>
+
+  <h3>BD/刷单识别</h3>
+  <p class="calc-desc">
+    <span class="field">order_mark</span> 含 "BD"/"Bd" 即为刷单。<br>
+    顶部「含BD」开关 → 默认开启，关闭后所有模块排除BD订单。
+  </p>
+
+  <h3>各维度毛利差异原因</h3>
+  <p class="calc-desc">
+    <strong>付款 vs 净销售</strong>：净销售已扣退款，分母更小，毛利率通常更低（退款越多差异越大）。<br>
+    <strong>付款 vs 出库</strong>：发货延迟导致出库维度订单量可能不同；未发货订单成本不计入出库。
+  </p>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="closeCalcPanel()">关闭</button>
+  </div>
+</div>
+
+<!-- DATA -->
+<script>const DATA = {{DATA_PLACEHOLDER}};</script>
+
+<script>
+// ===== STATE =====
+let state = {
+  dim: 'net_sales',
+  includeBd: true,
+  dateFrom: '',
+  dateTo: '',
+  preset: 'this_month',
+  customActive: false,
+  showCustomRange: false,
+};
+let charts = {};
+
+// Saved targets
+function loadTargets() {
+  try { return JSON.parse(localStorage.getItem('flashwater_targets') || '[]'); } catch(e) { return []; }
+}
+function getMergedTargets() {
+  const dbTargets = DATA.targets || [];
+  const saved = loadTargets();
+  const merged = new Map();
+  dbTargets.forEach(t => merged.set(`${t.platform}|${t.year}|${t.month}`, t));
+  saved.forEach(t => merged.set(`${t.platform}|${t.year}|${t.month}`, t));
+  return Array.from(merged.values());
+}
+function saveTargetToLocal(t) {
+  const saved = loadTargets();
+  const idx = saved.findIndex(s => s.platform === t.platform && s.year === t.year && s.month === t.month);
+  if (idx >= 0) saved[idx] = t; else saved.push(t);
+  localStorage.setItem('flashwater_targets', JSON.stringify(saved));
+}
+function deleteTargetFromLocal(platform, year, month) {
+  let saved = loadTargets();
+  saved = saved.filter(s => !(s.platform === platform && s.year === year && s.month === month));
+  localStorage.setItem('flashwater_targets', JSON.stringify(saved));
+}
+
+// ===== UTILS =====
+const fmt = (n, d=0) => Number(n||0).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtY = (n) => '¥' + fmt(n, 0);
+const fmtPct = (n) => (n*100).toFixed(1) + '%';
+const fmtRate = (n) => n.toFixed(1) + '%';
+function parseDate(s) { const p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+function fmtDate(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function fmtDateCN(d) {
+  const dt = typeof d === 'string' ? parseDate(d) : d;
+  return (dt.getMonth()+1)+'月'+dt.getDate()+'日';
+}
+function showToast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2000);
+}
+
+// ===== DATE RANGE DISPLAY =====
+function updateDateRangeDisplay() {
+  const range = getDateRange();
+  const text = fmtDateCN(range.from) + ' — ' + fmtDateCN(range.to);
+  document.getElementById('dateRangeText').textContent = text;
+  
+  // Also sync hidden inputs
+  document.getElementById('dateFrom').value = range.from;
+  document.getElementById('dateTo').value = range.to;
+}
+
+function toggleCustomRange() {
+  state.showCustomRange = !state.showCustomRange;
+  const fromEl = document.getElementById('dateFrom');
+  const toEl = document.getElementById('dateTo');
+  const displayEl = document.getElementById('dateRangeDisplay');
+  const queryBtn = document.getElementById('btnQuery');
+  
+  if (state.showCustomRange) {
+    displayEl.style.display = 'none';
+    fromEl.style.display = 'inline-block';
+    toEl.style.display = 'inline-block';
+    queryBtn.textContent = '查询';
+    
+    // Init with current range
+    const range = getDateRange();
+    fromEl.value = range.from;
+    toEl.value = range.to;
+  } else {
+    displayEl.style.display = 'inline-flex';
+    fromEl.style.display = 'none';
+    toEl.style.display = 'none';
+    queryBtn.textContent = '自定义';
+  }
+}
+
+function applyCustomQuery() {
+  const df = document.getElementById('dateFrom').value;
+  const dt = document.getElementById('dateTo').value;
+  if (!df || !dt) { showToast('请选择起止日期'); return; }
+  state.preset = 'custom';
+  state.dateFrom = df;
+  state.dateTo = dt;
+  state.customActive = true;
+  state.showCustomRange = false;
+  
+  document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('periodValue').value = '';
+  
+  // Switch back to display mode
+  toggleCustomRange();
+  updateDateRangeDisplay();
+  refreshAll();
+}
+
+// ===== TIME FILTERS =====
+function getDateRange() {
+  const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // T+1: today's data is incomplete, use yesterday as the effective "latest"
+  const yesterday = new Date(today); yesterday.setDate(yesterday.getDate() - 1);
+  let from, to;
+  
+  switch(state.preset) {
+    case 'today':
+    case 'yesterday':
+      from = new Date(yesterday);
+      to = new Date(yesterday);
+      break;
+    case '7d':
+      from = new Date(yesterday); from.setDate(from.getDate()-6);
+      to = new Date(yesterday);
+      break;
+    case '30d':
+      from = new Date(yesterday); from.setDate(from.getDate()-29);
+      to = new Date(yesterday);
+      break;
+    case 'this_month':
+      from = new Date(yesterday.getFullYear(), yesterday.getMonth(), 1);
+      to = new Date(yesterday);
+      break;
+    case 'last_month':
+      from = new Date(today.getFullYear(), today.getMonth()-1, 1);
+      to = new Date(today.getFullYear(), today.getMonth(), 0);
+      break;
+    case 'custom':
+      if (state.dateFrom && state.dateTo) return { from: state.dateFrom, to: state.dateTo };
+      from = new Date(yesterday.getFullYear(), yesterday.getMonth(), 1);
+      to = new Date(yesterday);
+      break;
+    default:
+      from = new Date(yesterday.getFullYear(), yesterday.getMonth(), 1);
+      to = new Date(yesterday);
+  }
+  return { from: fmtDate(from), to: fmtDate(to) };
+}
+
+// ===== DYNAMIC COMPARISON: selected period vs previous equal-length period =====
+function getComparison(range, dim) {
+  const src = dim === 'shipping' ? DATA.shipping_daily : DATA.payment_daily;
+  const includeBd = state.includeBd;
+  const isNetSales = dim === 'net_sales';
+  
+  // Calculate previous period of equal length
+  const fromD = new Date(range.from + 'T00:00:00');
+  const toD = new Date(range.to + 'T00:00:00');
+  const days = Math.round((toD - fromD) / (1000*60*60*24)) + 1;
+  
+  const prevTo = fmtDate(new Date(fromD.getTime() - 1000*60*60*24));
+  const prevFrom = fmtDate(new Date(new Date(prevTo + 'T00:00:00').getTime() - (days-1)*1000*60*60*24));
+  
+  function aggregate(from, to) {
+    let total = { sales: 0, orders: 0, refund: 0, net_sales: 0, cost: 0 };
+    src.forEach(d => {
+      if (!includeBd && d.is_bd) return;
+      if (d.date < from || d.date > to) return;
+      total.sales += isNetSales ? d.net_sales : d.sales;
+      total.orders += isNetSales ? (d.net_orders ?? d.orders) : d.orders;
+      total.refund += d.refund;
+      total.net_sales += d.net_sales;
+      total.cost += d.cost;
+    });
+    total.asp = total.orders > 0 ? total.sales / total.orders : 0;
+    total.refund_rate = total.sales > 0 ? total.refund / total.sales : 0;
+    total.margin = total.sales > 0 ? (total.sales - total.cost) / total.sales : 0;
+    return total;
+  }
+  
+  const current = aggregate(range.from, range.to);
+  const previous = aggregate(prevFrom, prevTo);
+  
+  // Tag based on preset
+  const presetTags = { today: '日环比', yesterday: '日环比', '7d': '周环比', '30d': '月环比', this_month: '月环比', last_month: '月环比' };
+  const tag = presetTags[state.preset] || (days <= 1 ? '日环比' : days <= 7 ? '周环比' : '月环比');
+  
+  return { current, previous, prevFrom, prevTo, tag };
+}
+
+function setPresetUI(preset) {
+  document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`[data-preset="${preset}"]`);
+  if (btn) btn.classList.add('active');
+  if (preset !== 'custom') document.getElementById('periodValue').value = '';
+}
+
+function applyPreset(preset) {
+  state.preset = preset;
+  state.customActive = false;
+  setPresetUI(preset);
+  updateDateRangeDisplay();
+  refreshAll();
+}
+
+// Period mode + value
+function onPeriodModeChange() {
+  populatePeriodValues();
+  document.getElementById('periodValue').value = '';
+  refreshAll();
+}
+function onPeriodValueChange() {
+  const mode = document.getElementById('periodMode').value;
+  const val = document.getElementById('periodValue').value;
+  if (!val) return;
+
+  if (mode === 'month') {
+    state.preset = 'custom';
+    state.dateFrom = val + '-01';
+    const [y, m] = val.split('-').map(Number);
+    state.dateTo = val + '-' + String(new Date(y, m, 0).getDate()).padStart(2, '0');
+  } else {
+    const [y, w] = val.split('-W').map(Number);
+    const jan4 = new Date(y, 0, 4);
+    const dayOfWeek = jan4.getDay() || 7;
+    const firstMonday = new Date(jan4);
+    firstMonday.setDate(jan4.getDate() - dayOfWeek + 1);
+    const monday = new Date(firstMonday);
+    monday.setDate(firstMonday.getDate() + (w - 1) * 7);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    state.preset = 'custom';
+    state.dateFrom = fmtDate(monday);
+    state.dateTo = fmtDate(sunday);
+  }
+  state.customActive = true;
+  document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
+  updateDateRangeDisplay();
+  refreshAll();
+}
+
+function populatePeriodValues() {
+  const mode = document.getElementById('periodMode').value;
+  const sel = document.getElementById('periodValue');
+  sel.innerHTML = '<option value="">---</option>';
+
+  if (mode === 'month') {
+    const months = new Set();
+    DATA.payment_daily.forEach(d => months.add(d.date.slice(0, 7)));
+    Array.from(months).sort().forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m.replace('2026-', '') + '月';
+      sel.appendChild(opt);
+    });
+  } else {
+    const weekMap = new Map();
+    const weekDates = new Map();
+    DATA.payment_daily.forEach(d => {
+      const dt = parseDate(d.date);
+      const wk = getISOWeek(dt);
+      const key = wk.year + '-W' + String(wk.week).padStart(2, '0');
+      if (!weekMap.has(key)) {
+        weekMap.set(key, wk);
+        const monday = getMondayOfISOWeek(wk.year, wk.week);
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        weekDates.set(key, { monday, sunday });
+      }
+    });
+    Array.from(weekMap.keys()).sort().forEach(key => {
+      const dd = weekDates.get(key);
+      const opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = `${key.split('-')[0]}W${key.split('-W')[1]} (${fmtDateShort(dd.monday)}-${fmtDateShort(dd.sunday)})`;
+      sel.appendChild(opt);
+    });
+  }
+}
+
+// ===== DATA AGGREGATION =====
+function aggregateData() {
+  const range = getDateRange();
+  const src = state.dim === 'shipping' ? DATA.shipping_daily : DATA.payment_daily;
+  const includeBd = state.includeBd;
+  
+  let filtered = src.filter(d => {
+    if (!includeBd && d.is_bd) return false;
+    if (d.date < range.from || d.date > range.to) return false;
+    return true;
+  });
+  
+  const byPlat = {};
+  const byDate = {};
+  let total = { sales: 0, orders: 0, refund: 0, net_sales: 0, cost: 0 };
+  
+  filtered.forEach(d => {
+    const isNetSales = state.dim === 'net_sales';
+    const sales = isNetSales ? d.net_sales : d.sales;
+    const orders = isNetSales ? (d.net_orders ?? d.orders) : d.orders;
+    
+    if (!byPlat[d.platform]) byPlat[d.platform] = { sales: 0, orders: 0, refund: 0, net_sales: 0, cost: 0 };
+    byPlat[d.platform].sales += sales;
+    byPlat[d.platform].orders += orders;
+    byPlat[d.platform].refund += d.refund;
+    byPlat[d.platform].net_sales += d.net_sales;
+    byPlat[d.platform].cost += d.cost;
+    
+    if (!byDate[d.date]) byDate[d.date] = { sales: 0, orders: 0, refund: 0, net_sales: 0, cost: 0 };
+    byDate[d.date].sales += sales;
+    byDate[d.date].orders += orders;
+    byDate[d.date].refund += d.refund;
+    byDate[d.date].net_sales += d.net_sales;
+    byDate[d.date].cost += d.cost;
+    
+    total.sales += sales;
+    total.orders += orders;
+    total.refund += d.refund;
+    total.net_sales += d.net_sales;
+    total.cost += d.cost;
+  });
+  
+  const dates = Object.keys(byDate).sort();
+  const dailyArr = dates.map(d => ({ date: d, ...byDate[d] }));
+  
+  const platforms = DATA.meta.platforms.filter(p => byPlat[p]);
+  const platArr = platforms.map(p => ({ platform: p, ...byPlat[p] }));
+  platArr.push({ platform: '合计', isTotal: true, ...total });
+  
+  return { total, byPlat, byDate, dailyArr, platArr, filtered, dates };
+}
+
+// ===== AGGREGATE PRODUCTS BY TIME RANGE =====
+function aggregateProductsByRange(range) {
+  const daily = DATA.product_sales_daily || [];
+  if (!daily.length) return null;
+  
+  const byName = {};
+  daily.forEach(d => {
+    if (d.date < range.from || d.date > range.to) return;
+    const key = d.item_name;
+    if (!byName[key]) {
+      byName[key] = { name: key, sku_code: d.sku_code, qty: 0, sales: 0, orders: 0 };
+    }
+    byName[key].qty += d.qty;
+    byName[key].sales += d.sales;
+    byName[key].orders += d.orders;
+  });
+  
+  // Merge with all-time cost data
+  const allProducts = DATA.products || [];
+  const costMap = {};
+  allProducts.forEach(p => { 
+    if (p.name) costMap[p.name] = { cost: p.cost, margin_pct: p.margin_pct, margin: p.gross_margin };
+  });
+  
+  const products = Object.values(byName).map(p => {
+    const ref = costMap[p.name] || {};
+    const cost = p.sales > 0 ? (ref.cost || 0) * (p.sales / (allProducts.find(ap => ap.name === p.name)?.sales || p.sales)) : 0;
+    const marginPct = ref.margin_pct || 0;
+    const grossMargin = p.sales - (cost || 0);
+    return { ...p, cost: Math.round(cost * 100) / 100, margin_pct: Math.round(marginPct * 10) / 10, gross_margin: Math.round(grossMargin * 100) / 100 };
+  });
+  
+  products.sort((a, b) => b.sales - a.sales);
+  return { products, count: products.length, isEmpty: products.length === 0 };
+}
+
+// ===== RENDER ALL =====
+function refreshAll() {
+  const d = aggregateData();
+  const range = getDateRange();
+  const productsByRange = aggregateProductsByRange(range);
+  renderKPI(d);
+  renderTargets(d);
+  renderPlatformDonut(d);
+  renderDailyChart(d);
+  renderPlatformTable(d);
+  renderMarginChart(d);
+  renderProductTable(productsByRange);
+  renderInventory();
+  renderProductDim(productsByRange);
+  renderLogistics(range);
+  updateFooter();
+}
+
+// ===== KPI =====
+function renderKPI(d) {
+  const t = d.total;
+  const dimLabel = state.dim === 'shipping' ? '出库' : state.dim === 'net_sales' ? '净销售' : '付款';
+  
+  const asp = t.orders > 0 ? t.sales / t.orders : 0;
+  const refundRate = t.sales > 0 ? t.refund / t.sales : 0;
+  const margin = t.sales > 0 ? (t.sales - t.cost) / t.sales : 0;
+  
+  const range = getDateRange();
+  const cmp = getComparison(range, state.dim);
+  const compData = cmp.current;
+  const prevData = cmp.previous;
+  const compTag = cmp.tag;
+  
+  function cmpBadge(curVal, prevVal, isPct) {
+    if (prevVal == null || prevVal == 0) return '';
+    const diff = isPct ? (curVal - prevVal) : (curVal - prevVal);
+    const pctChange = prevVal !== 0 ? (diff / prevVal * 100) : 0;
+    const absChange = Math.abs(isPct ? diff*100 : diff);
+    const cls = diff > 0.001 ? 'up' : diff < -0.001 ? 'down' : 'flat';
+    const arrow = diff > 0.001 ? '↑' : diff < -0.001 ? '↓' : '→';
+    if (isPct) return `<div class="kpi-cmp ${cls}">${arrow} ${absChange.toFixed(1)}pp<span class="kpi-cmp-tag">${compTag}</span></div>`;
+    return `<div class="kpi-cmp ${cls}">${arrow} ${pctChange.toFixed(1)}% (¥${fmt(Math.abs(diff),0)})<span class="kpi-cmp-tag">${compTag}</span></div>`;
+  }
+  
+  const cards = [
+    { label: dimLabel+'额', value: t.sales, unit: '元', fmt: fmtY, primary: true,
+      cmpVal: compData?compData.sales:null, prevVal: prevData?prevData.sales:null },
+    { label: '订单数', value: t.orders, unit: '单', fmt: fmt,
+      cmpVal: compData?compData.orders:null, prevVal: prevData?prevData.orders:null },
+    { label: '笔单价', value: asp, unit: '元', fmt: v => '¥'+fmt(v,0),
+      cmpVal: compData?compData.asp:null, prevVal: prevData?prevData.asp:null },
+    { label: '退款额', value: t.refund, unit: '元', fmt: fmtY,
+      cmpVal: compData?compData.refund:null, prevVal: prevData?prevData.refund:null },
+    { label: '退款率', value: refundRate, unit: '', fmt: fmtPct,
+      cmpVal: compData?(compData.refund_rate||0):null, prevVal: prevData?(prevData.refund_rate||0):null, isPct: true },
+    { label: '毛利率', value: margin, unit: '', fmt: fmtPct,
+      cmpVal: compData?(compData.margin||0):null, prevVal: prevData?(prevData.margin||0):null, isPct: true },
+  ];
+  
+  document.getElementById('kpiRow').innerHTML = cards.map(c => `
+    <div class="card kpi-card ${c.primary?'primary':''}">
+      <div class="kpi-label">${c.label}</div>
+      <div class="kpi-value ${c.primary?'lg':''}">${c.fmt(c.value)}<span class="kpi-unit">${c.unit}</span></div>
+      ${c.cmpVal != null && c.prevVal != null ? cmpBadge(c.cmpVal, c.prevVal, c.isPct) : ''}
+    </div>
+  `).join('');
+  
+  document.getElementById('trendTitle').textContent = '日' + dimLabel + '趋势';
+}
+
+// ===== PLATFORM DONUT CHART (NEW) =====
+function renderPlatformDonut(d) {
+  if (charts.platformDonut) charts.platformDonut.destroy();
+  const ctx = document.getElementById('platformDonutChart').getContext('2d');
+  
+  const platforms = d.platArr.filter(p => !p.isTotal);
+  const labels = platforms.map(p => p.platform);
+  const data = platforms.map(p => p.sales);
+  const colors = ['#3b6df0','#10b981','#8b5cf6'];
+  const total = data.reduce((s,v) => s+v, 0);
+  
+  charts.platformDonut = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: colors,
+        borderColor: 'rgba(255,255,255,.8)',
+        borderWidth: 4,
+        hoverBorderWidth: 6,
+        hoverBorderColor: 'rgba(255,255,255,.95)',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 20, usePointStyle: true, pointStyleWidth: 10,
+            font: { size: 12, weight: '600', family: "'Inter','PingFang SC',sans-serif" },
+            generateLabels: function(chart) {
+              const ds = chart.data.datasets[0];
+              return chart.data.labels.map((label, i) => ({
+                text: label + '  ' + (ds.data[i]/total*100).toFixed(1) + '%',
+                fillStyle: ds.backgroundColor[i],
+                strokeStyle: ds.backgroundColor[i],
+                lineWidth: 0,
+                hidden: false,
+                index: i,
+                pointStyle: 'circle',
+                rotation: 0,
+              }));
+            }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' ' + ctx.label + ': ¥' + fmt(ctx.raw, 0) + ' (' + (ctx.raw/total*100).toFixed(1) + '%)'
+          }
+        }
+      }
+    }
+  });
+}
+
+// ===== DAILY CHART =====
+function renderDailyChart(d) {
+  if (charts.daily) charts.daily.destroy();
+  const ctx = document.getElementById('dailyChart').getContext('2d');
+  
+  const dates = d.dates.map(dd => dd.slice(5));
+  
+  charts.daily = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: '净销售额', data: d.dailyArr.map(dd => dd.net_sales),
+          borderColor: '#3b6df0', backgroundColor: 'rgba(59,109,240,.08)',
+          fill: true, tension: .35, borderWidth: 3, pointRadius: 2,
+          pointBackgroundColor: '#3b6df0', yAxisID: 'y',
+        },
+        {
+          label: '销售额', data: d.dailyArr.map(dd => dd.sales),
+          borderColor: '#10b981', backgroundColor: 'transparent',
+          borderWidth: 2, borderDash: [5,5], tension: .35, pointRadius: 0, yAxisID: 'y',
+        },
+        {
+          label: '退款', data: d.dailyArr.map(dd => dd.refund),
+          borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.06)',
+          fill: true, tension: .35, borderWidth: 2, pointRadius: 1, yAxisID: 'y1',
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, padding: 16, font: { size: 10 } } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ¥' + fmt(ctx.raw, 0) } }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#8e9bb4', maxTicksLimit: 16 } },
+        y: {
+          type: 'linear', position: 'left',
+          grid: { color: 'rgba(200,210,230,.25)' },
+          ticks: { font: { size: 9 }, color: '#8e9bb4', callback: v => v>=1000?'¥'+(v/1000).toFixed(0)+'k':'¥'+v }
+        },
+        y1: {
+          type: 'linear', position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { font: { size: 9 }, color: '#8e9bb4', callback: v => '¥'+v }
+        }
+      }
+    }
+  });
+}
+
+// ===== PLATFORM TABLE =====
+function renderPlatformTable(d) {
+  let rows = d.platArr.map(p => {
+    const isTotal = p.isTotal;
+    const asp = p.orders > 0 ? p.sales / p.orders : 0;
+    const refundRate = p.sales > 0 ? p.refund / p.sales : 0;
+    const cls = isTotal ? 'total-row' : '';
+    return `<tr class="${cls}">
+      <td><strong>${p.platform}</strong></td>
+      <td class="num">${fmtY(p.sales)}</td>
+      <td class="num">${fmt(p.orders)}单</td>
+      <td class="num">${fmtY(p.refund)}</td>
+      <td class="num">${fmtY(p.net_sales)}</td>
+      <td class="num">¥${fmt(asp,0)}</td>
+      <td class="num">${fmtPct(refundRate)}</td>
+    </tr>`;
+  }).join('');
+  
+  document.getElementById('platformTable').innerHTML = `
+    <thead><tr>
+      <th>平台</th><th class="num">销售额</th><th class="num">订单数</th>
+      <th class="num">退款</th><th class="num">净销售</th>
+      <th class="num">笔单价</th><th class="num">退款率</th>
+    </tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ===== MARGIN CHART =====
+function renderMarginChart(d) {
+  if (charts.margin) charts.margin.destroy();
+  const ctx = document.getElementById('marginChart').getContext('2d');
+  
+  const platforms = d.platArr.filter(p => !p.isTotal);
+  const labels = platforms.map(p => p.platform);
+  const salesData = platforms.map(p => p.sales);
+  const costData = platforms.map(p => p.cost);
+  const marginData = platforms.map(p => p.sales - p.cost);
+  
+  charts.margin = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: '成本', data: costData, backgroundColor: '#f59e0b', borderRadius: 6, barPercentage: .6, stack: 'cost' },
+        { label: '毛利', data: marginData, backgroundColor: '#10b981', borderRadius: { topLeft: 6, topRight: 6 }, barPercentage: .6, stack: 'cost' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, padding: 12, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              const total = salesData[ctx.dataIndex];
+              const pct = total > 0 ? (ctx.raw / total * 100) : 0;
+              return ctx.dataset.label + ': ¥' + fmt(ctx.raw, 0) + ' (' + pct.toFixed(1) + '%)';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { font: { size: 10 }, color: '#8e9bb4' } },
+        y: { stacked: true, grid: { color: 'rgba(200,210,230,.25)' }, ticks: { font: { size: 9 }, color: '#8e9bb4', callback: v => '¥'+fmt(v,0) } }
+      }
+    }
+  });
+}
+
+// ===== PRODUCT TABLE (time-linked) =====
+function renderProductTable(productsByRange) {
+  const range = getDateRange();
+  const isFullRange = range.from <= '2026-04-17' && range.to >= '2026-07-17';
+  const titleEl = document.getElementById('productRankTitle');
+  if (titleEl) titleEl.textContent = isFullRange ? '商品排行（累计）' : '商品排行（' + range.from + ' ~ ' + range.to + '）';
+  
+  if (productsByRange && !productsByRange.isEmpty) {
+    const products = productsByRange.products.slice(0, 12);
+    let rows = products.map((p, i) => `
+      <tr>
+        <td style="font-weight:700;color:var(--text2);">${i+1}</td>
+        <td style="font-weight:600;">${p.name}</td>
+        <td class="num">${fmtY(p.sales)}</td>
+        <td class="num">${fmt(p.qty)}</td>
+        <td class="num">${fmtY(p.cost)}</td>
+        <td class="num">${fmtY(p.gross_margin)}</td>
+        <td class="num ${p.margin_pct>=60?'good':p.margin_pct<40?'warn':''}">${p.margin_pct}%</td>
+        <td class="num">${fmt(p.orders)}</td>
+      </tr>
+    `).join('');
+    
+    document.getElementById('productTable').innerHTML = `
+      <thead><tr>
+        <th>#</th><th>商品</th><th class="num">销售额</th><th class="num">销量</th>
+        <th class="num">成本</th><th class="num">毛利额</th><th class="num">毛利率</th><th class="num">关联订单</th>
+      </tr></thead><tbody>${rows}</tbody>`;
+    return;
+  }
+  
+  // Fallback: all-time data
+  const products = DATA.products || [];
+  let rows = products.slice(0, 12).map((p, i) => `
+    <tr>
+      <td style="font-weight:700;color:var(--text2);">${i+1}</td>
+      <td style="font-weight:600;">${p.name}</td>
+      <td class="num">${fmtY(p.sales)}</td>
+      <td class="num">${fmt(p.qty)}</td>
+      <td class="num">${fmtY(p.cost)}</td>
+      <td class="num">${fmtY(p.gross_margin)}</td>
+      <td class="num ${p.margin_pct>=60?'good':p.margin_pct<40?'warn':''}">${p.margin_pct}%</td>
+      <td class="num">${fmt(p.orders)}</td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('productTable').innerHTML = `
+    <thead><tr>
+      <th>#</th><th>商品</th><th class="num">销售额</th><th class="num">销量</th>
+      <th class="num">成本</th><th class="num">毛利额</th><th class="num">毛利率</th><th class="num">关联订单</th>
+    </tr></thead><tbody>${rows}</tbody>`;
+}
+
+// ===== INVENTORY =====
+function renderInventory() {
+  const invData = DATA.dim_inventory || [];
+  if (!invData.length) {
+    document.getElementById('inventoryContent').innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;text-align:center;">暂无库存数据</div>';
+    return;
+  }
+  
+  const skuMap = {};
+  invData.forEach(item => {
+    const key = item.sku_code + '|' + item.warehouse_code;
+    if (!skuMap[key]) skuMap[key] = { ...item };
+  });
+  
+  const items = Object.values(skuMap);
+  let totalValue = 0, totalQty = 0;
+  
+  const prodMap = {};
+  (DATA.dim_products || []).forEach(p => { prodMap[p.sku_code] = p.goods_name; });
+  
+  let rows = items.map(item => {
+    const qty = item.quantity || 0;
+    const lock = item.lock_size || 0;
+    const avail = qty - lock;
+    const cost = item.cost_total || 0;
+    const unitCost = item.unit_cost || 0;
+    totalValue += cost;
+    totalQty += qty;
+    const name = prodMap[item.sku_code] || item.spec_name || item.sku_code;
+    const isLow = qty < 100 && qty > 0;
+    const isOut = qty <= 0;
+    
+    return `<tr>
+      <td style="font-family:monospace;font-size:11px;">${item.sku_code}</td>
+      <td>${name}</td>
+      <td style="font-family:monospace;font-size:10px;color:var(--text3);">${item.warehouse_code}</td>
+      <td class="num" style="${isOut?'color:var(--text3);':''}">${fmt(qty,0)}</td>
+      <td class="num" style="color:var(--amber);">${fmt(lock,0)}</td>
+      <td class="num" style="${isLow?'color:var(--red);font-weight:700;':isOut?'color:var(--text3);':''}">${fmt(avail,0)}</td>
+      <td class="num">¥${fmt(unitCost,2)}</td>
+      <td class="num" style="font-weight:600;">¥${fmt(cost,0)}</td>
+    </tr>`;
+  }).join('');
+  
+  document.getElementById('inventoryContent').innerHTML = `
+    <table class="data-table" style="font-size:11px;">
+      <thead><tr>
+        <th>SKU</th><th>商品名</th><th>仓库</th><th class="num">库存量</th>
+        <th class="num">锁定</th><th class="num">可用</th><th class="num">成本单价</th><th class="num">库存价值</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3"><strong>合计</strong></td>
+          <td class="num"><strong>${fmt(totalQty,0)}</strong></td>
+          <td></td><td></td><td></td>
+          <td class="num"><strong>¥${fmt(totalValue,0)}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div style="margin-top:12px;font-size:10px;color:var(--text3);">
+      ⚠ 库存量<100 标红 · 库存为零标灰 · 数据来源：万里牛API（实时快照，不受时间筛选影响）
+    </div>`;
+}
+
+// ===== PRODUCT DIMENSION (time-linked) =====
+function renderProductDim(productsByRange) {
+  const dimProducts = DATA.dim_products || [];
+  if (!dimProducts.length) {
+    document.getElementById('productDimContent').innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;text-align:center;">暂无商品维度数据</div>';
+    return;
+  }
+  
+  // Build period sales map
+  const periodSalesMap = {};
+  if (productsByRange && !productsByRange.isEmpty) {
+    productsByRange.products.forEach(p => {
+      const key = p.name;
+      periodSalesMap[key] = { sales: p.sales, qty: p.qty, orders: p.orders, margin_pct: p.margin_pct };
+    });
+  }
+  
+  const allProducts = DATA.products || [];
+  const allMap = {};
+  allProducts.forEach(p => { if (p.name) allMap[p.name] = p; });
+  
+  const invMap = {};
+  (DATA.dim_inventory || []).forEach(item => {
+    if (item.warehouse_code === '001') invMap[item.sku_code] = item;
+  });
+  
+  const sorted = [...dimProducts].sort((a, b) => {
+    const aSales = (allMap[a.goods_name] || {}).sales || 0;
+    const bSales = (allMap[b.goods_name] || {}).sales || 0;
+    if (aSales !== bSales) return bSales - aSales;
+    return (b.unit_cost || 0) - (a.unit_cost || 0);
+  });
+  
+  let rows = sorted.map(p => {
+    const all = allMap[p.goods_name] || {};
+    const period = periodSalesMap[p.goods_name] || {};
+    const inv = invMap[p.sku_code] || {};
+    const psales = period.sales || 0;
+    const pqty = period.qty || 0;
+    const cost = p.unit_cost || 0;
+    const stock = inv.quantity || 0;
+    const isActive = p.status === 1;
+    const hasPeriod = psales > 0;
+    
+    return `<tr style="${!isActive?'opacity:0.4;':''}">
+      <td style="font-family:monospace;font-size:10px;">${p.sku_code}</td>
+      <td>${p.goods_name}${!isActive?' <span style="font-size:9px;color:var(--red);">[停用]</span>':''}${hasPeriod?' <span style="font-size:8px;color:var(--blue);">●</span>':''}</td>
+      <td class="num" style="font-weight:600;">¥${fmt(cost,2)}</td>
+      <td class="num">${hasPeriod?fmtY(psales):'<span style="color:var(--text3);">—</span>'}</td>
+      <td class="num">${hasPeriod?fmt(pqty,0):'<span style="color:var(--text3);">—</span>'}</td>
+      <td class="num">${fmtY(all.sales||0)}</td>
+      <td class="num ${(all.margin_pct||0)>=60?'good':(all.margin_pct||0)<30?'warn':''}">${all.sales>0?(all.margin_pct||0)+'%':'—'}</td>
+      <td class="num" style="${stock<100&&stock>0?'color:var(--red);font-weight:700;':stock<=0?'color:var(--text3);':''}">${fmt(stock,0)}</td>
+      <td class="num">${p.supplier_name||'—'}</td>
+    </tr>`;
+  }).join('');
+  
+  const hasPeriodData = Object.keys(periodSalesMap).length > 0;
+  
+  document.getElementById('productDimContent').innerHTML = `
+    <table class="data-table" style="font-size:11px;">
+      <thead><tr>
+        <th>SKU</th><th>商品名</th><th class="num">API成本均价</th>
+        <th class="num" style="color:var(--blue);">${hasPeriodData?'本期销售额':'销售额'}</th>
+        <th class="num" style="color:var(--blue);">${hasPeriodData?'本期销量':'销量'}</th>
+        <th class="num">累计销售额</th>
+        <th class="num">累计毛利率</th>
+        <th class="num">库存(仓001)</th>
+        <th class="num">供应商</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="margin-top:12px;font-size:10px;color:var(--text3);">
+      📦 成本均价取自万里牛商品API · 🔵 蓝色列为所选时间范围数据 · 灰色=停用商品
+    </div>`;
+}
+
+// ===== LOGISTICS (time-linked) =====
+function renderLogistics(range) {
+  const logistics = DATA.dim_logistics || {};
+  const dailyCarrier = logistics.daily_carrier || [];
+  const dailyProvince = logistics.daily_province || [];
+  
+  // Filter carriers by time range
+  let carriers = [];
+  let provinces = [];
+  
+  if (dailyCarrier.length) {
+    const carrierMap = {};
+    dailyCarrier.forEach(d => {
+      if (d.date < range.from || d.date > range.to) return;
+      if (!carrierMap[d.name]) carrierMap[d.name] = { name: d.name, orders: 0 };
+      carrierMap[d.name].orders += d.orders;
+    });
+    carriers = Object.values(carrierMap).sort((a,b) => b.orders - a.orders);
+  } else {
+    carriers = logistics.carriers || [];
+  }
+  
+  if (dailyProvince.length) {
+    const provinceMap = {};
+    dailyProvince.forEach(d => {
+      if (d.date < range.from || d.date > range.to) return;
+      if (!provinceMap[d.province]) provinceMap[d.province] = { province: d.province, orders: 0, sales: 0 };
+      provinceMap[d.province].orders += d.orders;
+      provinceMap[d.province].sales += d.sales;
+    });
+    provinces = Object.values(provinceMap).sort((a,b) => b.orders - a.orders);
+  } else {
+    provinces = logistics.provinces || [];
+  }
+  
+  if (!carriers.length && !provinces.length) {
+    document.getElementById('logCard').style.display = 'none';
+    return;
+  }
+  document.getElementById('logCard').style.display = '';
+  
+  if (charts.carrier) charts.carrier.destroy();
+  if (carriers.length) {
+    const ctx = document.getElementById('carrierChart').getContext('2d');
+    const colors = ['#3b6df0','#10b981','#f59e0b','#8b5cf6','#ef4444','#14b8a6'];
+    charts.carrier = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: carriers.map(c => c.name),
+        datasets: [{
+          data: carriers.map(c => c.orders),
+          backgroundColor: carriers.map((_,i) => colors[i%colors.length]),
+          borderWidth: 3,
+          borderColor: 'rgba(255,255,255,.8)',
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        cutout: '60%',
+        plugins: {
+          legend: { position: 'right', labels: { font: { size: 10 }, padding: 8, usePointStyle: true } },
+          tooltip: { callbacks: { label: ctx => ctx.label + ': ' + ctx.raw + '单 (' + (ctx.raw/carriers.reduce((s,c)=>s+c.orders,0)*100).toFixed(1) + '%)' } }
+        }
+      }
+    });
+  }
+  
+  if (provinces.length) {
+    const totalOrders = provinces.reduce((s,p) => s + p.orders, 0);
+    let rows = provinces.slice(0, 10).map((p, i) => `
+      <tr>
+        <td>${i+1}</td>
+        <td>${p.province}</td>
+        <td class="num">${fmt(p.orders,0)}单</td>
+        <td class="num">${fmtY(p.sales)}</td>
+        <td class="num">${(p.orders/totalOrders*100).toFixed(1)}%</td>
+      </tr>
+    `).join('');
+    document.getElementById('provinceTable').innerHTML = `
+      <thead><tr><th>#</th><th>省份</th><th class="num">订单数</th><th class="num">销售额</th><th class="num">占比</th></tr></thead>
+      <tbody>${rows}</tbody>`;
+  }
+}
+
+// ===== TARGET PANEL =====
+function openTargetPanel() {
+  document.getElementById('targetPanel').classList.add('show');
+  document.getElementById('targetPanelOverlay').classList.add('show');
+  const now = new Date();
+  document.getElementById('targetMonth').value = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  renderTargetList();
+}
+
+function closeTargetPanel() {
+  document.getElementById('targetPanel').classList.remove('show');
+  document.getElementById('targetPanelOverlay').classList.remove('show');
+}
+
+function saveTarget() {
+  const platform = document.getElementById('targetShop').value;
+  const monthVal = document.getElementById('targetMonth').value;
+  const amount = parseFloat(document.getElementById('targetAmount').value) || 0;
+  const orders = parseInt(document.getElementById('targetOrders').value) || 0;
+  if (!platform || !monthVal) { showToast('请填写完整信息'); return; }
+  const [y, m] = monthVal.split('-').map(Number);
+  saveTargetToLocal({ platform, year: y, month: m, target_amount: amount, target_orders: orders });
+  document.getElementById('targetAmount').value = '';
+  document.getElementById('targetOrders').value = '';
+  showToast('目标已保存');
+  renderTargetList();
+  refreshAll();
+}
+
+function deleteTarget(platform, year, month) {
+  deleteTargetFromLocal(platform, year, month);
+  showToast('目标已删除');
+  renderTargetList();
+  refreshAll();
+}
+
+function renderTargetList() {
+  const allTargets = getMergedTargets();
+  if (allTargets.length === 0) {
+    document.getElementById('targetListSection').style.display = 'none';
+    return;
+  }
+  document.getElementById('targetListSection').style.display = 'block';
+  const sorted = [...allTargets].sort((a,b) => {
+    if (a.platform !== b.platform) return a.platform.localeCompare(b.platform);
+    return (a.year*100+a.month) - (b.year*100+b.month);
+  });
+  document.getElementById('targetList').innerHTML = sorted.map(t => `
+    <div class="target-item">
+      <span class="shop">${t.platform}</span>
+      <span class="month">${t.year}-${String(t.month).padStart(2,'0')}</span>
+      <span class="val">¥${fmt(t.target_amount,0)}</span>
+      <span class="orders">${t.target_orders}单</span>
+      <button class="btn-danger" onclick="deleteTarget('${t.platform}',${t.year},${t.month})">删除</button>
+    </div>
+  `).join('');
+}
+
+// Close panel on overlay click
+['targetPanelOverlay','calcPanelOverlay'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) {
+      closeTargetPanel();
+      closeCalcPanel();
+    }
+  });
+});
+
+// ===== CALC PANEL =====
+function openCalcPanel() {
+  document.getElementById('calcPanel').classList.add('show');
+  document.getElementById('calcPanelOverlay').classList.add('show');
+}
+
+function closeCalcPanel() {
+  document.getElementById('calcPanel').classList.remove('show');
+  document.getElementById('calcPanelOverlay').classList.remove('show');
+}
+
+// ===== TARGET RENDER =====
+function renderTargets(d) {
+  const range = getDateRange();
+  const fromDate = parseDate(range.from);
+  const targetMonth = fromDate.getFullYear() * 100 + (fromDate.getMonth() + 1);
+  
+  const allTargets = getMergedTargets();
+  let targets = allTargets.filter(t => t.year * 100 + t.month === targetMonth);
+  
+  if (targets.length === 0) {
+    const prevTargets = allTargets.filter(t => (t.year * 100 + t.month) <= targetMonth);
+    if (prevTargets.length === 0) {
+      document.getElementById('targetProgress').innerHTML = '<div style="color:var(--text3);font-size:12px;text-align:center;padding:28px;font-weight:500;">暂未录入本月目标，点击右上角「📊 目标配置」快速录入</div>';
+      return;
+    }
+    const lastKey = Math.max(...prevTargets.map(t => t.year * 100 + t.month));
+    targets = allTargets.filter(t => (t.year * 100 + t.month) === lastKey);
+  }
+  
+  const now = new Date();
+  const daysInMonth = new Date(fromDate.getFullYear(), fromDate.getMonth()+1, 0).getDate();
+  const dayOfMonth = Math.min(now.getDate(), daysInMonth);
+  const timeProgress = Math.round(dayOfMonth / daysInMonth * 100);
+  
+  let html = '<div class="pressure-grid">';
+  
+  const platforms = ['天猫', '抖店', '小红书'];
+  let totalTarget = 0, totalActual = 0;
+  
+  platforms.forEach(plat => {
+    const t = targets.find(tt => tt.platform === plat);
+    const platData = d.byPlat[plat] || { sales: 0, orders: 0 };
+    const actual = platData.sales;
+    const target = t ? t.target_amount : 0;
+    const pct = target > 0 ? actual / target * 100 : 0;
+    
+    if (t) { totalTarget += target; totalActual += actual; }
+    
+    const gaugeColor = pct >= 100 ? 'var(--green)' : pct >= timeProgress * 0.8 ? 'var(--blue)' : pct >= timeProgress * 0.5 ? 'var(--amber)' : 'var(--red)';
+    const statusText = pct >= 100 ? '超标完成' : pct >= timeProgress ? '进度正常' : pct >= timeProgress * 0.5 ? '略有滞后' : '严重滞后';
+    const radius = 40, circumference = 2 * Math.PI * radius;
+    const dashOffset = circumference * (1 - Math.min(pct / 100, 1));
+    
+    html += `
+      <div class="pressure-card">
+        <div class="pressure-label">${plat}</div>
+        <div class="pressure-gauge">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="${radius}" fill="none" stroke="rgba(200,210,230,.25)" stroke-width="6"/>
+            <circle cx="50" cy="50" r="${radius}" fill="none" stroke="${gaugeColor}" stroke-width="6"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+              stroke-linecap="round" style="transition: stroke-dashoffset 1.2s ease;"/>
+            <circle cx="50" cy="50" r="${radius}" fill="none" stroke="rgba(200,210,230,.1)" stroke-width="1"
+              stroke-dasharray="2 6" style="transform:rotate(${timeProgress*3.6}deg);transform-origin:50% 50%;"/>
+          </svg>
+          <div class="pressure-center">
+            <div class="pressure-pct" style="color:${gaugeColor};">${fmtRate(pct)}</div>
+            <div class="pressure-status" style="color:${gaugeColor};">${statusText}</div>
+          </div>
+        </div>
+        <div class="pressure-detail">
+          ${fmtY(actual)} / ${target>0?fmtY(target):'未录入'}<br>
+          <span style="font-size:9px;color:var(--text3);">时间进度 ${fmtRate(timeProgress)}</span>
+        </div>
+      </div>`;
+  });
+  
+  const totalPct = totalTarget > 0 ? totalActual / totalTarget * 100 : 0;
+  const totalColor = totalPct >= 100 ? 'var(--green)' : totalPct >= timeProgress * 0.8 ? 'var(--blue)' : totalPct >= timeProgress * 0.5 ? 'var(--amber)' : 'var(--red)';
+  const totalStatus = totalPct >= 100 ? '超标完成' : totalPct >= timeProgress ? '进度正常' : totalPct >= timeProgress * 0.5 ? '略有滞后' : '严重滞后';
+  const radius2 = 40, circ2 = 2 * Math.PI * radius2;
+  const dash2 = circ2 * (1 - Math.min(totalPct / 100, 1));
+  
+  html += `
+    <div class="pressure-card total">
+      <div class="pressure-label" style="color:var(--blue);">全部平台</div>
+      <div class="pressure-gauge">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="${radius2}" fill="none" stroke="rgba(200,210,230,.25)" stroke-width="6"/>
+          <circle cx="50" cy="50" r="${radius2}" fill="none" stroke="${totalColor}" stroke-width="6"
+            stroke-dasharray="${circ2}" stroke-dashoffset="${dash2}"
+            stroke-linecap="round" style="transition: stroke-dashoffset 1.2s ease;"/>
+          <circle cx="50" cy="50" r="${radius2}" fill="none" stroke="rgba(200,210,230,.1)" stroke-width="1"
+            stroke-dasharray="2 6" style="transform:rotate(${timeProgress*3.6}deg);transform-origin:50% 50%;"/>
+        </svg>
+        <div class="pressure-center">
+          <div class="pressure-pct" style="color:${totalColor};">${fmtRate(totalPct)}</div>
+          <div class="pressure-status" style="color:${totalColor};">${totalStatus}</div>
+        </div>
+      </div>
+      <div class="pressure-detail">
+        ${fmtY(totalActual)} / ${totalTarget>0?fmtY(totalTarget):'未录入'}
+      </div>
+    </div>`;
+  
+  html += '</div>';
+  document.getElementById('targetProgress').innerHTML = html;
+}
+
+function updateFooter() {
+  document.getElementById('dataDate').textContent = DATA.meta.generated_at;
+  document.getElementById('bdStatus').textContent = state.includeBd ? '含BD' : '不含BD';
+}
+
+// ===== INIT =====
+function init() {
+  const now = new Date();
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  document.getElementById('dateFrom').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01';
+  document.getElementById('dateTo').value = fmtDate(yesterday);
+  updateDateRangeDisplay();
+  
+  // Time presets
+  document.querySelectorAll('#timePresets .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('periodValue').value = '';
+      applyPreset(btn.dataset.preset);
+    });
+  });
+  
+  // Query button
+  document.getElementById('btnQuery').addEventListener('click', () => {
+    if (state.showCustomRange) {
+      applyCustomQuery();
+    } else {
+      toggleCustomRange();
+    }
+  });
+  
+  populatePeriodValues();
+  
+  // Dimension tabs
+  document.querySelectorAll('.dim-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.dim-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      state.dim = tab.dataset.dim;
+      refreshAll();
+    });
+  });
+  
+  // BD toggle
+  document.getElementById('bdToggle').addEventListener('change', function() {
+    state.includeBd = this.checked;
+    refreshAll();
+  });
+  
+  refreshAll();
+}
+
+// Week helpers
+function getISOWeek(d) {
+  const date = new Date(d.getTime());
+  date.setHours(0,0,0,0);
+  date.setDate(date.getDate()+3-(date.getDay()+6)%7);
+  const week1 = new Date(date.getFullYear(),0,4);
+  const weekNum = 1+Math.round(((date.getTime()-week1.getTime())/86400000-3+(week1.getDay()+6)%7)/7);
+  return { year: date.getFullYear(), week: weekNum };
+}
+
+function getMondayOfISOWeek(y, w) {
+  const jan4 = new Date(y, 0, 4);
+  const dayOfWeek = jan4.getDay() || 7;
+  const firstMonday = new Date(jan4);
+  firstMonday.setDate(jan4.getDate() - dayOfWeek + 1);
+  const monday = new Date(firstMonday);
+  monday.setDate(firstMonday.getDate() + (w-1) * 7);
+  return monday;
+}
+
+function fmtDateShort(d) { return String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0'); }
+
+init();
+</script>
+</body>
+</html>

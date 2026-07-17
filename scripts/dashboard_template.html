@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Water 运营 BI 看板 v12</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#f0f2f6;color:#333}
+.header{background:linear-gradient(135deg,#0d2137,#1a3a5c,#1e4d7b);color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.15);position:sticky;top:0;z-index:100}
+.header h1{font-size:17px;font-weight:600}
+.header-r{display:flex;gap:6px;align-items:center}
+.header-r button,.header-r .bd-toggle{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px}
+.header-r button:hover{background:rgba(255,255,255,.25)}
+.main-container{max-width:1540px;margin:0 auto;padding:10px 14px}
+
+/* Filter */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;background:#fff;padding:8px 14px;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.filter-bar label{font-size:11px;color:#888;white-space:nowrap}
+.date-btn{font-size:11px;padding:4px 10px;border:1px solid #dde;border-radius:5px;background:#fff;color:#555;cursor:pointer;white-space:nowrap}
+.date-btn.active{background:#1e4d7b;color:#fff;border-color:#1e4d7b}
+.date-btn:hover:not(.active){background:#f0f4f8}
+.filter-select,.date-input{font-size:11px;padding:4px 8px;border:1px solid #dde;border-radius:5px;background:#fff;color:#555;outline:none}
+.bd-toggle-box{display:flex;align-items:center;gap:4px;margin-left:auto}
+.bd-switch{position:relative;width:36px;height:20px;display:inline-block}
+.bd-switch input{opacity:0;width:0;height:0}
+.bd-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.3s;border-radius:20px}
+.bd-slider:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background:white;transition:.3s;border-radius:50%}
+.bd-switch input:checked+.bd-slider{background-color:#e67e22}
+.bd-switch input:checked+.bd-slider:before{transform:translateX(16px)}
+.bd-label{font-size:10px;color:#999}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px}
+.kpi-card{background:#fff;border-radius:8px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,.05);border-left:3px solid #ddd;cursor:default;transition:transform .15s}
+.kpi-card:hover{transform:translateY(-1px)}
+.kpi-card .kpi-label{font-size:10px;color:#999;margin-bottom:2px}
+.kpi-card .kpi-value{font-size:18px;font-weight:700;color:#0d2137}
+.kpi-card .kpi-sub{font-size:9px;color:#bbb;margin-top:1px}
+.accent-blue{border-left-color:#1e4d7b}.accent-green{border-left-color:#27ae60}.accent-orange{border-left-color:#e67e22}.accent-purple{border-left-color:#8e44ad}.accent-teal{border-left-color:#16a085}.accent-cyan{border-left-color:#2980b9}.accent-red{border-left-color:#e74c3c}
+
+.section-title{font-size:12px;color:#0d2137;font-weight:600;margin:10px 0 6px 4px;display:flex;align-items:center;gap:8px}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.chart-grid.col3{grid-template-columns:1fr 1fr 1fr}
+.chart-grid.full{grid-template-columns:1fr}
+.chart-card{background:#fff;border-radius:10px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.chart-card h3{font-size:12px;color:#0d2137;margin-bottom:6px;font-weight:600;display:flex;align-items:center;gap:8px}
+.chart-box{width:100%;height:280px}
+.chart-box.short{height:220px}.chart-box.tall{height:360px}
+
+.table-wrap{max-height:360px;overflow-y:auto;border-radius:8px}
+.data-table{width:100%;border-collapse:collapse;font-size:11px}
+.data-table th{background:#f7f8fa;padding:6px 8px;text-align:left;font-weight:600;color:#555;border-bottom:2px solid #e2e8f0;position:sticky;top:0;z-index:1;font-size:10px}
+.data-table td{padding:5px 8px;border-bottom:1px solid #f0f2f5;color:#666}
+.data-table tr:hover td{background:#f7f8fa}
+.data-table .num{text-align:right;font-family:"SF Mono","Consolas",monospace;font-size:10px}
+.num.positive{color:#27ae60}.num.negative{color:#e74c3c}
+
+.line-tag{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;margin-right:4px;font-weight:500}
+.tag-pay{background:#e3f2fd;color:#1565c0}
+.tag-ship{background:#fff3e0;color:#e65100}
+.tag-net{background:#e8f5e9;color:#2e7d32}
+
+/* Progress */
+.progress-wrap{height:6px;background:#e9ecef;border-radius:3px;overflow:hidden;margin-top:3px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s}
+.pg-good{background:#27ae60}.pg-warn{background:#f39c12}.pg-danger{background:#e74c3c}.pg-over{background:#8e44ad}
+
+/* Target edit */
+.target-edit{width:80px;font-size:11px;padding:2px 6px;border:1px dashed #dde;border-radius:3px;text-align:right;background:#fffbeb;outline:none}
+.target-edit:focus{border-color:#1e4d7b;background:#fff}
+.ts-card{background:#f7f8fa;border-radius:8px;padding:8px 10px;text-align:center}
+.ts-card .ts-num{font-size:16px;font-weight:700;color:#0d2137}
+.ts-card .ts-label{font-size:9px;color:#999;margin-top:1px}
+.target-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:768px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.chart-grid,.chart-grid.col3{grid-template-columns:1fr}.target-summary{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div><h1>Flash Water 运营 BI 看板 v12</h1></div>
+    <div class="header-r">
+        <div class="bd-toggle-box">
+            <span class="bd-label">排除BD</span>
+            <label class="bd-switch"><input type="checkbox" id="bdToggle" onchange="applyFilters()" checked><span class="bd-slider"></span></label>
+            <span class="bd-label">含BD</span>
+        </div>
+        <button onclick="location.reload()">刷新</button>
+    </div>
+</div>
+
+<div class="main-container">
+
+<!-- 筛选栏 -->
+<div class="filter-bar" id="filterBar">
+    <label>时间:</label>
+    <button class="date-btn" onclick="setQuickDate('today')">今天</button>
+    <button class="date-btn" onclick="setQuickDate('7d')">近7天</button>
+    <button class="date-btn" onclick="setQuickDate('30d')">近30天</button>
+    <button class="date-btn active" onclick="setQuickDate('this_month')">本月</button>
+    <button class="date-btn" onclick="setQuickDate('last_month')">上月</button>
+    <button class="date-btn" onclick="setQuickDate('this_week')">本周</button>
+    <button class="date-btn" onclick="setQuickDate('last_week')">上周</button>
+    <input type="date" class="date-input" id="dateFrom" onchange="setQuickDate('custom')">
+    <span style="font-size:10px;color:#999">至</span>
+    <input type="date" class="date-input" id="dateTo" onchange="setQuickDate('custom')">
+    <label style="margin-left:8px">店铺:</label>
+    <select class="filter-select" id="filterShop" onchange="applyFilters()">
+        <option value="all">全店汇总</option>
+    </select>
+</div>
+
+<!-- KPI -->
+<div class="kpi-grid" id="kpiCards"></div>
+
+<!-- Target -->
+<div class="chart-card" style="margin-bottom:10px">
+    <h3>🎯 目标完成情况
+        <select class="filter-select" id="targetMonth" onchange="renderTarget()"></select>
+        <select class="filter-select" id="targetShop" onchange="renderTarget()"><option value="all">全店</option></select>
+    </h3>
+    <div class="target-summary" id="targetSummary"></div>
+    <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:10px">
+        <div class="chart-box short" id="cTarget"></div>
+        <div class="table-wrap" style="max-height:220px"><table class="data-table" id="tblTarget"></table></div>
+    </div>
+</div>
+
+<!-- 三线对比 -->
+<div class="chart-card" style="margin-bottom:10px">
+    <h3>📊 三线对比（按月）</h3>
+    <div class="table-wrap"><table class="data-table" id="tblThreeLine"></table></div>
+</div>
+
+<!-- 漏斗 + 趋势 -->
+<div class="chart-grid">
+    <div class="chart-card"><h3>🔄 订单漏斗</h3><div class="chart-box short" id="cFunnel"></div></div>
+    <div class="chart-card"><h3>📈 净成交月度趋势</h3><div class="chart-box short" id="cTrend"></div></div>
+</div>
+
+<!-- 平台 + 退款 -->
+<div class="chart-grid">
+    <div class="chart-card"><h3>🏪 平台对比</h3><div class="table-wrap"><table class="data-table" id="tblPlatform"></table></div></div>
+    <div class="chart-card"><h3>🔙 退款趋势</h3><div class="chart-box short" id="cRefund"></div></div>
+</div>
+
+<!-- 商品 + 店铺 -->
+<div class="chart-grid">
+    <div class="chart-card"><h3>🏆 商品 TOP10</h3><div class="table-wrap"><table class="data-table" id="tblProduct"></table></div></div>
+    <div class="chart-card"><h3>📋 店铺明细</h3><div class="table-wrap"><table class="data-table" id="tblShop"></table></div></div>
+</div>
+
+</div>
+
+<script>
+var RAW = __DATA_JSON_PLACEHOLDER__;
+var FILTER = {dateFrom:'', dateTo:'', shop:'all', excludeBD:true, quick:'this_month'};
+var charts = {};
+
+function fmt(n,d){d=d||2;return n==null?'-':Number(n).toLocaleString('zh-CN',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function fmtInt(n){return n==null?'0':Number(n).toLocaleString('zh-CN')}
+function pct(v){return v==null?'0.00':Number(v).toFixed(2)+'%'}
+
+// ======== 日期工具 ========
+function toDate(s){var p=s.split('-');return new Date(p[0],p[1]-1,p[2])}
+function dateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function ymStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+
+function getDefaultRange(){
+    var now = new Date();
+    return {from: dateStr(new Date(now.getFullYear(),now.getMonth(),1)), to: dateStr(now)};
+}
+
+function setQuickDate(type){
+    FILTER.quick = type;
+    var now = new Date(), from, to;
+    var btns = document.querySelectorAll('.date-btn');
+    btns.forEach(function(b){b.classList.remove('active')});
+
+    if(type==='today'){
+        from=to=dateStr(now);
+        var b = btns[0]; if(b.textContent==='今天') b.classList.add('active');
+    }else if(type==='7d'){
+        from=dateStr(new Date(now.getTime()-6*86400000));
+        to=dateStr(now);
+        btns[1].classList.add('active');
+    }else if(type==='30d'){
+        from=dateStr(new Date(now.getTime()-29*86400000));
+        to=dateStr(now);
+        btns[2].classList.add('active');
+    }else if(type==='this_month'){
+        from=dateStr(new Date(now.getFullYear(),now.getMonth(),1));
+        to=dateStr(now);
+        btns[3].classList.add('active');
+    }else if(type==='last_month'){
+        var lm=new Date(now.getFullYear(),now.getMonth()-1,1);
+        from=dateStr(lm);
+        to=dateStr(new Date(now.getFullYear(),now.getMonth(),0));
+        btns[4].classList.add('active');
+    }else if(type==='this_week'){
+        var dow=now.getDay(); dow=dow===0?7:dow;
+        from=dateStr(new Date(now.getTime()-(dow-1)*86400000));
+        to=dateStr(now);
+        btns[5].classList.add('active');
+    }else if(type==='last_week'){
+        var dow=now.getDay(); dow=dow===0?7:dow;
+        to=dateStr(new Date(now.getTime()-dow*86400000));
+        from=dateStr(new Date(now.getTime()-(dow+6)*86400000));
+        btns[6].classList.add('active');
+    }else{
+        from=document.getElementById('dateFrom').value;
+        to=document.getElementById('dateTo').value;
+    }
+    document.getElementById('dateFrom').value = from;
+    document.getElementById('dateTo').value = to;
+    FILTER.dateFrom = from;
+    FILTER.dateTo = to;
+    applyFilters();
+}
+
+// ======== 筛选逻辑 ========
+function getFilteredData(){
+    var daily = RAW.daily || [];
+    var excludeBD = document.getElementById('bdToggle').checked;
+    var shop = document.getElementById('filterShop').value;
+    var from = FILTER.dateFrom, to = FILTER.dateTo;
+
+    return daily.filter(function(d){
+        if(d.date < from || d.date > to) return false;
+        if(shop!=='all' && d.shop_name!==shop) return false;
+        return true;
+    }).map(function(d){
+        // BD 处理
+        var bdFactor = excludeBD ? 0 : 1;
+        return {
+            date: d.date, shop_name: d.shop_name, platform_label: d.platform_label,
+            pay_orders: d.pay_orders + d.bd_orders * bdFactor,
+            pay_amount: d.pay_amount + d.bd_amount * bdFactor,
+            refund_orders: d.refund_orders,
+            refund_amount: d.refund_amount,
+            ship_orders: d.ship_orders,
+            ship_amount: d.ship_amount,
+            ship_cost: d.ship_cost,
+            bd_orders: d.bd_orders,
+            bd_amount: d.bd_amount
+        };
+    });
+}
+
+function aggregateData(filtered){
+    var agg = {
+        pay_orders:0, pay_amount:0, refund_orders:0, refund_amount:0,
+        ship_orders:0, ship_amount:0, ship_cost:0, bd_orders:0, bd_amount:0
+    };
+    filtered.forEach(function(d){
+        agg.pay_orders += d.pay_orders;
+        agg.pay_amount += d.pay_amount;
+        agg.refund_orders += d.refund_orders;
+        agg.refund_amount += d.refund_amount;
+        agg.ship_orders += d.ship_orders;
+        agg.ship_amount += d.ship_amount;
+        agg.ship_cost += d.ship_cost;
+        agg.bd_orders += d.bd_orders;
+        agg.bd_amount += d.bd_amount;
+    });
+    agg.net_orders = agg.pay_orders;
+    agg.net_amount = agg.pay_amount - agg.refund_amount;
+    agg.pay_avg = agg.pay_orders>0 ? agg.pay_amount/agg.pay_orders : 0;
+    agg.net_avg = agg.pay_orders>0 ? agg.net_amount/agg.pay_orders : 0;
+    agg.ship_avg = agg.ship_orders>0 ? agg.ship_amount/agg.ship_orders : 0;
+    agg.ship_margin = agg.ship_amount>0 ? (agg.ship_amount-agg.ship_cost)/agg.ship_amount*100 : 0;
+    return agg;
+}
+
+function applyFilters(){
+    renderKPI();
+    renderFunnel();
+    renderTrend();
+    renderThreeLine();
+    renderPlatform();
+    renderRefund();
+    renderShop();
+}
+
+// ======== KPI Cards ========
+function renderKPI(){
+    var agg = aggregateData(getFilteredData());
+    var cards = [
+        {label:'付款金额',value:'¥'+fmt(agg.pay_amount),sub:'付款'+fmtInt(agg.pay_orders)+'笔 · 笔单价¥'+fmt(agg.pay_avg),cls:'accent-blue'},
+        {label:'付款笔数',value:fmtInt(agg.pay_orders),sub:'商家应收(万里牛口径)',cls:'accent-cyan'},
+        {label:'笔单价(付款)',value:'¥'+fmt(agg.pay_avg),sub:'付款金额÷付款笔数',cls:'accent-teal'},
+        {label:'净成交金额',value:'¥'+fmt(agg.net_amount),sub:'付款¥'+fmt(agg.pay_amount)+' − 售后¥'+fmt(agg.refund_amount),cls:'accent-green'},
+        {label:'净成交笔单价',value:'¥'+fmt(agg.net_avg),sub:'净成交金额÷付款笔数',cls:'accent-green'},
+        {label:'出库金额',value:'¥'+fmt(agg.ship_amount),sub:'出库'+fmtInt(agg.ship_orders)+'单 · 笔单价¥'+fmt(agg.ship_avg),cls:'accent-orange'},
+        {label:'出库毛利率',value:pct(agg.ship_margin),sub:'(出库-成本)÷出库金额 · 成本¥'+fmt(agg.ship_cost),cls:'accent-purple'},
+    ];
+    document.getElementById('kpiCards').innerHTML = cards.map(function(c){
+        return '<div class="kpi-card '+c.cls+'"><div class="kpi-label">'+c.label+'</div><div class="kpi-value">'+c.value+'</div><div class="kpi-sub">'+c.sub+'</div></div>';
+    }).join('');
+}
+
+// ======== Target ========
+(function initTargetFilters(){
+    var shops = [], months = [];
+    (RAW.target_completion||[]).forEach(function(t){
+        if(shops.indexOf(t.shop_name)<0) shops.push(t.shop_name);
+        if(months.indexOf(t.ym)<0) months.push(t.ym);
+    });
+    months.sort().reverse();
+    var selS = document.getElementById('targetShop');
+    shops.forEach(function(s){selS.innerHTML += '<option value="'+s+'">'+s+'</option>'});
+    var selM = document.getElementById('targetMonth');
+    months.forEach(function(m){selM.innerHTML += '<option value="'+m+'">'+m+'</option>'});
+    renderTarget();
+})();
+
+function renderTarget(){
+    var mFilter = document.getElementById('targetMonth').value;
+    var sFilter = document.getElementById('targetShop').value;
+    var tc = RAW.target_completion||[];
+
+    var filtered = tc.filter(function(t){
+        if(mFilter && t.ym!==mFilter) return false;
+        if(sFilter!=='all' && t.shop_name!==sFilter) return false;
+        return true;
+    });
+
+    // Aggregate if all shops
+    if(sFilter==='all' && mFilter){
+        var tTotal=0, aTotal=0, oTotal=0, aoTotal=0;
+        filtered.forEach(function(t){tTotal+=t.target_amount; aTotal+=t.net_amount; oTotal+=t.target_orders; aoTotal+=t.net_orders});
+        filtered = [{ym:mFilter, shop_name:'全店', target_amount:tTotal, target_orders:oTotal, net_amount:aTotal, net_orders:aoTotal,
+            amount_pct: tTotal>0?(aTotal/tTotal*100).toFixed(1):0, orders_pct: oTotal>0?(aoTotal/oTotal*100).toFixed(1):0, id:null}];
+    }
+    filtered.sort(function(a,b){return a.ym.localeCompare(b.ym)||a.shop_name.localeCompare(b.shop_name)});
+
+    var totalT=0, totalA=0;
+    filtered.forEach(function(t){totalT+=t.target_amount; totalA+=t.net_amount});
+    var totalPct = totalT>0?(totalA/totalT*100).toFixed(1):0;
+    var gap = totalT - totalA;
+    var pCls = Number(totalPct)>=100?'pg-good':Number(totalPct)>=80?'pg-warn':'pg-danger';
+
+    document.getElementById('targetSummary').innerHTML =
+        '<div class="ts-card"><div class="ts-label">目标总额</div><div class="ts-num">¥'+fmt(totalT)+'</div></div>'+
+        '<div class="ts-card"><div class="ts-label">实际净成交</div><div class="ts-num" style="color:#27ae60">¥'+fmt(totalA)+'</div></div>'+
+        '<div class="ts-card"><div class="ts-label">完成率</div><div class="ts-num" style="color:'+(Number(totalPct)>=100?'#27ae60':Number(totalPct)>=80?'#e67e22':'#e74c3c')+'">'+totalPct+'%</div><div class="progress-wrap"><div class="progress-fill '+pCls+'" style="width:'+Math.min(Number(totalPct),100)+'%"></div></div></div>'+
+        '<div class="ts-card"><div class="ts-label">'+(gap>0?'尚需完成':'超出目标')+'</div><div class="ts-num" style="color:'+(gap>0?'#e74c3c':'#27ae60')+'">¥'+fmt(Math.abs(gap))+'</div></div>';
+
+    // Chart
+    if(charts.target) charts.target.dispose();
+    var c = echarts.init(document.getElementById('cTarget')); charts.target = c;
+    c.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['目标额','实际额'],bottom:0},
+        grid:{left:60,right:20,top:20,bottom:40},
+        xAxis:{type:'category',data:filtered.map(function(d){return (d.shop_name==='全店'?d.ym:d.ym+' '+d.shop_name.substring(0,6))}),axisLabel:{fontSize:9}},
+        yAxis:{type:'value',axisLabel:{fontSize:10,formatter:function(v){return (v/10000).toFixed(1)+'万'}}},
+        series:[
+            {name:'目标额',type:'bar',data:filtered.map(function(d){return d.target_amount}),itemStyle:{color:'#b0bec5'},barGap:'20%'},
+            {name:'实际额',type:'bar',data:filtered.map(function(d){return d.net_amount}),itemStyle:{color:function(p){var v=filtered[p.dataIndex];return Number(v.amount_pct)>=100?'#27ae60':Number(v.amount_pct)>=80?'#f39c12':'#e74c3c'}}},
+        ]
+    });
+
+    // Table with edit
+    var h = '<thead><tr><th>月份</th><th>店铺</th><th class="num">目标额</th><th class="num">实际额</th><th class="num">完成率</th><th class="num">差额</th></tr></thead><tbody>';
+    filtered.forEach(function(t){
+        var diff = t.net_amount - (t.target_amount||0);
+        h += '<tr>';
+        h += '<td>'+t.ym+'</td><td>'+t.shop_name+'</td>';
+        h += '<td class="num"><input class="target-edit" type="number" value="'+(t.target_amount||0)+'" data-id="'+t.id+'" data-shop="'+t.shop_name+'" data-ym="'+t.ym+'" onchange="saveTarget(this)" style="width:80px"></td>';
+        h += '<td class="num positive">¥'+fmt(t.net_amount)+'</td>';
+        h += '<td class="num '+(Number(t.amount_pct)>=100?'positive':Number(t.amount_pct)>=80?'':'negative')+'">'+t.amount_pct+'%<div class="progress-wrap"><div class="progress-fill '+(Number(t.amount_pct)>=100?'pg-over':Number(t.amount_pct)>=80?'pg-good':'pg-warn')+'" style="width:'+Math.min(Number(t.amount_pct),100)+'%"></div></div></td>';
+        h += '<td class="num '+(diff>=0?'positive':'negative')+'">'+(diff>=0?'+':'')+'¥'+fmt(diff)+'</td>';
+        h += '</tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('tblTarget').innerHTML = h;
+}
+
+function saveTarget(el){
+    // In production this would POST to a backend. For now, update RAW.
+    var id = el.dataset.id, shop = el.dataset.shop, ym = el.dataset.ym, val = parseFloat(el.value)||0;
+    var tc = RAW.target_completion;
+    for(var i=0;i<tc.length;i++){
+        if((id && tc[i].id==id) || (tc[i].shop_name===shop && tc[i].ym===ym)){
+            tc[i].target_amount = val;
+            tc[i].amount_pct = val>0 ? (tc[i].net_amount/val*100).toFixed(1) : 0;
+            break;
+        }
+    }
+    renderTarget();
+}
+
+// ======== 三线对比 ========
+function renderThreeLine(){
+    var rows = RAW.monthly;
+    var excludeBD = document.getElementById('bdToggle').checked;
+    var map = {};
+    rows.forEach(function(r){
+        if(!map[r.ym]) map[r.ym] = {ym:r.ym,pay_orders:0,pay_amount:0,refund_amount:0,ship_orders:0,ship_amount:0,ship_cost:0,bd_orders:0,bd_amount:0};
+        var m=map[r.ym];
+        m.pay_orders += r.pay_orders + (excludeBD?0:r.bd_orders);
+        m.pay_amount += r.pay_amount + (excludeBD?0:r.bd_amount);
+        m.refund_amount += r.refund_amount;
+        m.ship_orders += r.ship_orders;
+        m.ship_amount += r.ship_amount;
+        m.ship_cost += r.ship_cost;
+    });
+    Object.values(map).forEach(function(m){
+        m.net_amount = m.pay_amount - m.refund_amount;
+        m.pay_avg = m.pay_orders>0?m.pay_amount/m.pay_orders:0;
+        m.net_avg = m.pay_orders>0?m.net_amount/m.pay_orders:0;
+        m.ship_avg = m.ship_orders>0?m.ship_amount/m.ship_orders:0;
+        m.ship_margin = m.ship_amount>0?(m.ship_amount-m.ship_cost)/m.ship_amount*100:0;
+    });
+    var sorted = Object.values(map).sort(function(a,b){return a.ym.localeCompare(b.ym)});
+
+    var h = '<thead><tr><th>月份</th><th colspan="3"><span class="line-tag tag-pay">付款线</span></th><th colspan="2"><span class="line-tag tag-net">净成交线</span></th><th colspan="3"><span class="line-tag tag-ship">出库线</span></th></tr>';
+    h += '<tr><th></th><th class="num">付款笔数</th><th class="num">付款金额</th><th class="num">笔单价</th><th class="num">净成交额</th><th class="num">笔单价</th><th class="num">出库单量</th><th class="num">出库金额</th><th class="num">笔单价</th></tr></thead><tbody>';
+    sorted.forEach(function(m){
+        h += '<tr><td>'+m.ym+'</td>';
+        h += '<td class="num">'+fmtInt(m.pay_orders)+'</td>';
+        h += '<td class="num">¥'+fmt(m.pay_amount)+'</td>';
+        h += '<td class="num">¥'+fmt(m.pay_avg)+'</td>';
+        h += '<td class="num positive">¥'+fmt(m.net_amount)+'</td>';
+        h += '<td class="num">¥'+fmt(m.net_avg)+'</td>';
+        h += '<td class="num">'+fmtInt(m.ship_orders)+'</td>';
+        h += '<td class="num">¥'+fmt(m.ship_amount)+'</td>';
+        h += '<td class="num">¥'+fmt(m.ship_avg)+'</td>';
+        h += '</tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('tblThreeLine').innerHTML = h;
+}
+
+// ======== Order Funnel ========
+function renderFunnel(){
+    var agg = aggregateData(getFilteredData());
+    if(charts.funnel) charts.funnel.dispose();
+    var c = echarts.init(document.getElementById('cFunnel')); charts.funnel = c;
+    c.setOption({
+        tooltip:{trigger:'item',formatter:'{b}: {c} 单'},
+        series:[{
+            type:'funnel',left:'15%',width:'70%',sort:'descending',gap:2,
+            label:{show:true,position:'inside',fontSize:13,formatter:'{b}\n{c}单'},
+            data:[
+                {value:agg.pay_orders,name:'付款订单',itemStyle:{color:'#5470c6'}},
+                {value:agg.ship_orders,name:'出库订单',itemStyle:{color:'#fac858'}},
+                {value:agg.net_orders,name:'净成交',itemStyle:{color:'#91cc75'}},
+            ]
+        }]
+    });
+}
+
+// ======== Monthly Trend ========
+function renderTrend(){
+    var rows = RAW.monthly;
+    var excludeBD = document.getElementById('bdToggle').checked;
+    var map = {};
+    rows.forEach(function(r){
+        if(!map[r.ym]) map[r.ym] = {ym:r.ym,pay:0,refund:0,net:0};
+        map[r.ym].pay += r.pay_amount + (excludeBD?0:r.bd_amount);
+        map[r.ym].refund += r.refund_amount;
+    });
+    Object.values(map).forEach(function(m){m.net = m.pay - m.refund});
+    var sorted = Object.values(map).sort(function(a,b){return a.ym.localeCompare(b.ym)});
+    if(charts.trend) charts.trend.dispose();
+    var c = echarts.init(document.getElementById('cTrend')); charts.trend = c;
+    c.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['付款金额','售后金额','净成交额'],bottom:0},
+        grid:{left:60,right:20,top:20,bottom:40},
+        xAxis:{type:'category',data:sorted.map(function(d){return d.ym}),axisLabel:{fontSize:10}},
+        yAxis:{type:'value',axisLabel:{fontSize:10,formatter:function(v){return (v/10000).toFixed(1)+'万'}}},
+        series:[
+            {name:'付款金额',type:'bar',data:sorted.map(function(d){return d.pay}),itemStyle:{color:'#5470c6'},barGap:'10%'},
+            {name:'售后金额',type:'bar',data:sorted.map(function(d){return d.refund}),itemStyle:{color:'#fac858'}},
+            {name:'净成交额',type:'line',data:sorted.map(function(d){return d.net}),itemStyle:{color:'#91cc75'},symbol:'circle',symbolSize:6},
+        ]
+    });
+}
+
+// ======== Platform ========
+function renderPlatform(){
+    var rows = RAW.platforms;
+    var excludeBD = document.getElementById('bdToggle').checked;
+    var h = '<thead><tr><th>平台</th><th class="num">付款笔数</th><th class="num">付款金额</th><th class="num">笔单价</th><th class="num">售后金额</th><th class="num">净成交额</th><th class="num">笔单价</th><th class="num">出库单量</th><th class="num">出库金额</th><th class="num">笔单价</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+        var pp = r.pay_orders, pa = r.pay_amount;
+        var na = pa - r.refund_amount;
+        h += '<tr><td>'+r.source_platform+'</td>';
+        h += '<td class="num">'+fmtInt(pp)+'</td>';
+        h += '<td class="num">¥'+fmt(pa)+'</td>';
+        h += '<td class="num">¥'+fmt(pp>0?pa/pp:0)+'</td>';
+        h += '<td class="num negative">¥'+fmt(r.refund_amount)+'</td>';
+        h += '<td class="num positive">¥'+fmt(na)+'</td>';
+        h += '<td class="num">¥'+fmt(pp>0?na/pp:0)+'</td>';
+        h += '<td class="num">'+fmtInt(r.ship_orders)+'</td>';
+        h += '<td class="num">¥'+fmt(r.ship_amount)+'</td>';
+        h += '<td class="num">¥'+fmt(r.ship_orders>0?r.ship_amount/r.ship_orders:0)+'</td>';
+        h += '</tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('tblPlatform').innerHTML = h;
+}
+
+// ======== Refund ========
+function renderRefund(){
+    var rows = RAW.refunds;
+    if(charts.refund) charts.refund.dispose();
+    var c = echarts.init(document.getElementById('cRefund')); charts.refund = c;
+    c.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['售后金额','退款率'],bottom:0},
+        grid:{left:60,right:50,top:20,bottom:40},
+        xAxis:{type:'category',data:rows.map(function(d){return d.ym}),axisLabel:{fontSize:10}},
+        yAxis:[
+            {type:'value',axisLabel:{fontSize:10,formatter:function(v){return (v/10000).toFixed(1)+'万'}}},
+            {type:'value',axisLabel:{fontSize:10,formatter:'{value}%'}}
+        ],
+        series:[
+            {name:'售后金额',type:'bar',data:rows.map(function(d){return d.refund_amount}),itemStyle:{color:'#ee6666'}},
+            {name:'退款率',type:'line',yAxisIndex:1,data:rows.map(function(d){return d.refund_rate}),itemStyle:{color:'#fc8452'},symbol:'circle',symbolSize:6},
+        ]
+    });
+}
+
+// ======== Product ========
+function renderProduct(){
+    var rows = RAW.products;
+    var h = '<thead><tr><th>商品</th><th class="num">订单数</th><th class="num">销量</th><th class="num">销售额</th><th class="num">毛利</th><th class="num">毛利率</th><th class="num">均价</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+        h += '<tr><td title="'+r.sku_code+'">'+(r.product_name||r.sku_code)+'</td>';
+        h += '<td class="num">'+fmtInt(r.order_count)+'</td>';
+        h += '<td class="num">'+fmtInt(r.total_qty)+'</td>';
+        h += '<td class="num">¥'+fmt(r.total_revenue)+'</td>';
+        h += '<td class="num positive">¥'+fmt(r.gross_profit)+'</td>';
+        h += '<td class="num positive">'+pct(r.gross_margin)+'</td>';
+        h += '<td class="num">¥'+fmt(r.avg_price)+'</td>';
+        h += '</tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('tblProduct').innerHTML = h;
+}
+
+// ======== Shop ========
+function renderShop(){
+    var rows = RAW.shops;
+    var excludeBD = document.getElementById('bdToggle').checked;
+    var h = '<thead><tr><th>店铺</th><th class="num">付款笔数</th><th class="num">付款金额</th><th class="num">笔单价</th><th class="num">售后金额</th><th class="num">净成交额</th><th class="num">笔单价</th><th class="num">出库单量</th></tr></thead><tbody>';
+    rows.forEach(function(r){
+        var pp = r.pay_orders + (excludeBD?0:r.bd_orders);
+        var pa = r.pay_amount + (excludeBD?0:r.bd_amount);
+        var na = pa - r.refund_amount;
+        h += '<tr><td>'+r.shop_name+'<br><small style="color:#999">'+r.platform_label+'</small></td>';
+        h += '<td class="num">'+fmtInt(pp)+'</td>';
+        h += '<td class="num">¥'+fmt(pa)+'</td>';
+        h += '<td class="num">¥'+fmt(pp>0?pa/pp:0)+'</td>';
+        h += '<td class="num negative">¥'+fmt(r.refund_amount)+'</td>';
+        h += '<td class="num positive">¥'+fmt(na)+'</td>';
+        h += '<td class="num">¥'+fmt(pp>0?na/pp:0)+'</td>';
+        h += '<td class="num">'+fmtInt(r.ship_orders)+'</td>';
+        h += '</tr>';
+    });
+    h += '</tbody>';
+    document.getElementById('tblShop').innerHTML = h;
+}
+
+// ======== Init ========
+(function init(){
+    // Init shop filter
+    var shops = [];
+    (RAW.daily||[]).forEach(function(d){if(shops.indexOf(d.shop_name)<0) shops.push(d.shop_name)});
+    var sel = document.getElementById('filterShop');
+    shops.forEach(function(s){sel.innerHTML += '<option value="'+s+'">'+s+'</option>'});
+
+    // Default: this month
+    var r = getDefaultRange();
+    FILTER.dateFrom = r.from;
+    FILTER.dateTo = r.to;
+    document.getElementById('dateFrom').value = r.from;
+    document.getElementById('dateTo').value = r.to;
+
+    applyFilters();
+    renderProduct();
+})();
+</script>
+</body>
+</html>

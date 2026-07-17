@@ -1,0 +1,30 @@
+# 数据库文件（含敏感数据，不入库）
+data/*.db
+data/*.sqlite
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 原始数据文件
+*.xlsx
+*.xls
+*.csv
+*.base
+
+# 备份
+v11_backup/
+
+# WorkBuddy
+.workbuddy/
+
+# 敏感配置
+scripts/db_init.py
+
+# 临时文件
+tmp/
+*.tmp
+
+# 其他大文件
+万里牛字段指标逻辑_files/
