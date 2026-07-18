@@ -146,10 +146,25 @@ WEBHOOK_FILE="$PROJECT_DIR/data/.webhook"
 if [ "$WEEKDAY" = "1" ] && [ -f "$WEBHOOK_FILE" ]; then
     log "[6/6] 推送企微群消息..."
     WEBHOOK_URL=$(cat "$WEBHOOK_FILE")
+    # 用 Python 写 UTF-8 JSON 文件，curl 从文件读取避免中文编码问题
+    TMP_JSON="$PROJECT_DIR/tmp/wecom_push.json"
+    mkdir -p "$PROJECT_DIR/tmp"
+    $PYTHON -c "
+import json
+data = {
+    'msgtype': 'markdown',
+    'markdown': {
+        'content': '## 📊 FlashWater BI 看板 本周已更新\n> 数据已同步至 $(date '+%m月%d日')，看板已部署\n> 访问地址：[flashwater-BI.github.io](https://flashwater-BI.github.io/flashwater-bi/)\n> 本周密码：<font color=\"warning\">$PASSWORD</font>'
+    }
+}
+with open('$TMP_JSON', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False)
+" >> "$LOG_FILE" 2>&1
     curl -s "$WEBHOOK_URL" \
-        -H 'Content-Type: application/json' \
-        -d "{\"msgtype\":\"markdown\",\"markdown\":{\"content\":\"## 📊 FlashWater BI 看板 本周已更新\n> 数据已同步至 $(date '+%m月%d日')，看板已部署\n> 访问地址：[flashwater-BI.github.io](https://flashwater-BI.github.io/flashwater-bi/)\n> 本周密码：<font color=\\\"warning\\\">$PASSWORD</font>\"}}" \
+        -H 'Content-Type: application/json; charset=utf-8' \
+        -d "@$TMP_JSON" \
         >> "$LOG_FILE" 2>&1
+    rm -f "$TMP_JSON"
     log "  ✓ 企微群消息已推送"
 elif [ "$WEEKDAY" = "1" ]; then
     log "[6/6] ⚠ 今天是周一但未配置企微webhook (data/.webhook)，跳过推送"
