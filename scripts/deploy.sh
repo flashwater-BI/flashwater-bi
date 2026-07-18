@@ -140,6 +140,23 @@ fi
 log "  ✓ 推送完成"
 
 # ============================================================
+# Step 6: 周一推送访问地址和本周密码到企微群
+# ============================================================
+WEBHOOK_FILE="$PROJECT_DIR/data/.webhook"
+if [ "$WEEKDAY" = "1" ] && [ -f "$WEBHOOK_FILE" ]; then
+    log "[6/6] 推送企微群消息..."
+    WEBHOOK_URL=$(cat "$WEBHOOK_FILE")
+    curl -s "$WEBHOOK_URL" \
+        -H 'Content-Type: application/json' \
+        -d "{\"msgtype\":\"markdown\",\"markdown\":{\"content\":\"## 📊 FlashWater BI 看板 本周已更新\n> 数据已同步至 $(date '+%m月%d日')，看板已部署\n> 访问地址：[flashwater-BI.github.io](https://flashwater-BI.github.io/flashwater-bi/)\n> 本周密码：<font color=\\\"warning\\\">$PASSWORD</font>\"}}" \
+        >> "$LOG_FILE" 2>&1
+    log "  ✓ 企微群消息已推送"
+elif [ "$WEEKDAY" = "1" ]; then
+    log "[6/6] ⚠ 今天是周一但未配置企微webhook (data/.webhook)，跳过推送"
+fi
+# 非周一不做任何推送
+
+# ============================================================
 # 完成
 # ============================================================
 log "========== 部署完成 =========="
