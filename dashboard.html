@@ -784,13 +784,33 @@ function getComparison(range, dim) {
   const includeBd = state.includeBd;
   const isNetSales = dim === 'net_sales';
   
-  // Calculate previous period of equal length
   const fromD = new Date(range.from + 'T00:00:00');
   const toD = new Date(range.to + 'T00:00:00');
   const days = Math.round((toD - fromD) / (1000*60*60*24)) + 1;
+  let prevFrom, prevTo;
   
-  const prevTo = fmtDate(new Date(fromD.getTime() - 1000*60*60*24));
-  const prevFrom = fmtDate(new Date(new Date(prevTo + 'T00:00:00').getTime() - (days-1)*1000*60*60*24));
+  // Month presets: compare against calendar months (not equal-length windows)
+  if (state.preset === 'last_month') {
+    // Full previous month: e.g. June → May 1-31
+    const prevMonthStart = new Date(fromD.getFullYear(), fromD.getMonth() - 1, 1);
+    const prevMonthEnd = new Date(fromD.getFullYear(), fromD.getMonth(), 0);
+    prevFrom = fmtDate(prevMonthStart);
+    prevTo = fmtDate(prevMonthEnd);
+  } else if (state.preset === 'this_month') {
+    // Same day range in previous month: e.g. July 1-17 → June 1-17
+    const prevMonthStart = new Date(fromD.getFullYear(), fromD.getMonth() - 1, 1);
+    let prevEndDay = toD.getDate();
+    // Clamp to last day of previous month if it has fewer days
+    const lastDayPrev = new Date(fromD.getFullYear(), fromD.getMonth(), 0).getDate();
+    if (prevEndDay > lastDayPrev) prevEndDay = lastDayPrev;
+    const prevMonthEnd = new Date(fromD.getFullYear(), fromD.getMonth() - 1, prevEndDay);
+    prevFrom = fmtDate(prevMonthStart);
+    prevTo = fmtDate(prevMonthEnd);
+  } else {
+    // Non-month presets: equal-length window (original logic)
+    prevTo = fmtDate(new Date(fromD.getTime() - 1000*60*60*24));
+    prevFrom = fmtDate(new Date(new Date(prevTo + 'T00:00:00').getTime() - (days-1)*1000*60*60*24));
+  }
   
   function aggregate(from, to) {
     let total = { sales: 0, orders: 0, refund: 0, net_sales: 0, cost: 0 };
