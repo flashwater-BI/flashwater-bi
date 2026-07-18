@@ -407,9 +407,10 @@ body {
     </div>
     
     <!-- Period mode + value -->
-    <select class="date-input" id="periodMode" onchange="onPeriodModeChange()" style="min-width:72px;">
+    <select class="date-input" id="periodMode" onchange="onPeriodModeChange()" style="min-width:78px;">
       <option value="month">自然月</option>
       <option value="week">自然周</option>
+      <option value="custom">自定义</option>
     </select>
     <select class="date-input" id="periodValue" onchange="onPeriodValueChange()" style="min-width:80px;">
       <option value="">---</option>
@@ -421,10 +422,10 @@ body {
       <span id="dateRangeText">2026-07-01 ~ 2026-07-17</span>
     </div>
     
-    <input type="date" class="date-input" id="dateFrom" title="开始日期" style="display:none;">
-    <input type="date" class="date-input" id="dateTo" title="结束日期" style="display:none;">
+    <input type="date" class="date-input" id="dateFrom" title="开始日期" style="display:none;" min="">
+    <input type="date" class="date-input" id="dateTo" title="结束日期" style="display:none;" min="" max="">
     
-    <button class="btn-query" id="btnQuery" onclick="toggleCustomRange()">自定义</button>
+    <button class="btn-query" id="btnQuery" style="display:none;">查询</button>
     
     <span class="topbar-spacer"></span>
     
@@ -663,7 +664,6 @@ let state = {
   dateTo: '',
   preset: 'this_month',
   customActive: false,
-  showCustomRange: false,
 };
 let charts = {};
 
@@ -720,46 +720,19 @@ function updateDateRangeDisplay() {
   document.getElementById('dateTo').value = range.to;
 }
 
-function toggleCustomRange() {
-  state.showCustomRange = !state.showCustomRange;
-  const fromEl = document.getElementById('dateFrom');
-  const toEl = document.getElementById('dateTo');
-  const displayEl = document.getElementById('dateRangeDisplay');
-  const queryBtn = document.getElementById('btnQuery');
-  
-  if (state.showCustomRange) {
-    displayEl.style.display = 'none';
-    fromEl.style.display = 'inline-block';
-    toEl.style.display = 'inline-block';
-    queryBtn.textContent = '查询';
-    
-    // Init with current range
-    const range = getDateRange();
-    fromEl.value = range.from;
-    toEl.value = range.to;
-  } else {
-    displayEl.style.display = 'inline-flex';
-    fromEl.style.display = 'none';
-    toEl.style.display = 'none';
-    queryBtn.textContent = '自定义';
-  }
-}
-
 function applyCustomQuery() {
   const df = document.getElementById('dateFrom').value;
   const dt = document.getElementById('dateTo').value;
   if (!df || !dt) { showToast('请选择起止日期'); return; }
+  if (df > dt) { showToast('开始日期不能晚于结束日期'); return; }
   state.preset = 'custom';
   state.dateFrom = df;
   state.dateTo = dt;
   state.customActive = true;
-  state.showCustomRange = false;
   
   document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('periodValue').value = '';
   
-  // Switch back to display mode
-  toggleCustomRange();
   updateDateRangeDisplay();
   refreshAll();
 }
@@ -850,22 +823,60 @@ function setPresetUI(preset) {
   document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
   const btn = document.querySelector(`[data-preset="${preset}"]`);
   if (btn) btn.classList.add('active');
-  if (preset !== 'custom') document.getElementById('periodValue').value = '';
 }
 
 function applyPreset(preset) {
   state.preset = preset;
   state.customActive = false;
   setPresetUI(preset);
+  
+  // Reset mode dropdown to 'month' if user came from custom mode
+  const modeEl = document.getElementById('periodMode');
+  if (modeEl.value === 'custom') {
+    modeEl.value = 'month';
+    onPeriodModeChange();
+  }
+  
   updateDateRangeDisplay();
   refreshAll();
 }
 
 // Period mode + value
 function onPeriodModeChange() {
-  populatePeriodValues();
-  document.getElementById('periodValue').value = '';
-  refreshAll();
+  const mode = document.getElementById('periodMode').value;
+  const valEl = document.getElementById('periodValue');
+  const fromEl = document.getElementById('dateFrom');
+  const toEl = document.getElementById('dateTo');
+  const displayEl = document.getElementById('dateRangeDisplay');
+  const queryBtn = document.getElementById('btnQuery');
+  
+  if (mode === 'custom') {
+    // Switch to custom mode: hide periodValue, show date inputs + query button
+    valEl.style.display = 'none';
+    fromEl.style.display = 'inline-block';
+    toEl.style.display = 'inline-block';
+    queryBtn.style.display = 'inline-block';
+    displayEl.style.display = 'none';
+    
+    // Init date inputs with current range (respects whatever preset is active)
+    const range = getDateRange();
+    fromEl.value = range.from;
+    toEl.value = range.to;
+    
+    // Clear preset button highlights
+    document.querySelectorAll('#timePresets .filter-btn').forEach(b => b.classList.remove('active'));
+  } else {
+    // Switch to month/week mode: hide date inputs, show periodValue
+    fromEl.style.display = 'none';
+    toEl.style.display = 'none';
+    queryBtn.style.display = 'none';
+    displayEl.style.display = 'inline-flex';
+    valEl.style.display = 'inline-block';
+    
+    populatePeriodValues();
+    valEl.value = '';
+    // Don't auto-apply — wait for user to select a specific month/week
+  }
 }
 function onPeriodValueChange() {
   const mode = document.getElementById('periodMode').value;
@@ -1739,9 +1750,24 @@ function updateFooter() {
 function init() {
   const now = new Date();
   const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-  document.getElementById('dateFrom').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01';
-  document.getElementById('dateTo').value = fmtDate(yesterday);
+  
+  // Compute data date range
+  const dates = DATA.payment_daily.map(d => d.date).sort();
+  const dataMinDate = dates[0] || '2026-04-01';
+  const dataMaxDate = fmtDate(yesterday);
+  
+  // Set date input constraints
+  document.getElementById('dateFrom').min = dataMinDate;
+  document.getElementById('dateFrom').max = dataMaxDate;
+  document.getElementById('dateTo').min = dataMinDate;
+  document.getElementById('dateTo').max = dataMaxDate;
+  document.getElementById('dateFrom').value = dataMinDate;
+  document.getElementById('dateTo').value = dataMaxDate;
+  
   updateDateRangeDisplay();
+  
+  // Initialize period mode UI (show month/week selector by default)
+  onPeriodModeChange();
   
   // Time presets
   document.querySelectorAll('#timePresets .filter-btn').forEach(btn => {
@@ -1751,14 +1777,8 @@ function init() {
     });
   });
   
-  // Query button
-  document.getElementById('btnQuery').addEventListener('click', () => {
-    if (state.showCustomRange) {
-      applyCustomQuery();
-    } else {
-      toggleCustomRange();
-    }
-  });
+  // Query button (only visible in custom mode)
+  document.getElementById('btnQuery').addEventListener('click', applyCustomQuery);
   
   populatePeriodValues();
   
