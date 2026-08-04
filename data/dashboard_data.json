@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-08-04 10:45:52",
+    "generated_at": "2026-08-04 11:01:15",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-08-03"
@@ -7558,23 +7558,23 @@
       "date": "2026-08-04",
       "platform": "天猫",
       "is_bd": false,
-      "orders": 17,
-      "net_orders": 17,
-      "sales": 683.31,
+      "orders": 18,
+      "net_orders": 18,
+      "sales": 738.07,
       "refund": 0.0,
-      "net_sales": 683.31,
-      "cost": 119.64
+      "net_sales": 738.07,
+      "cost": 129.14
     },
     {
       "date": "2026-08-04",
       "platform": "抖店",
       "is_bd": false,
-      "orders": 105,
-      "net_orders": 105,
-      "sales": 3979.9,
+      "orders": 110,
+      "net_orders": 110,
+      "sales": 4411.9,
       "refund": 0.0,
-      "net_sales": 3979.9,
-      "cost": 888.42
+      "net_sales": 4411.9,
+      "cost": 956.55
     },
     {
       "date": "2026-08-04",
@@ -26294,15 +26294,15 @@
       },
       "shipping": {
         "current": {
-          "orders": 1805,
-          "sales": 74131.43,
+          "orders": 1811,
+          "sales": 74618.19,
           "refund": 656.75,
-          "net_sales": 73474.68,
-          "net_orders": 1792,
-          "cost": 15872.41,
-          "margin": 0.7859,
-          "asp": 41.07,
-          "refund_rate": 0.0089
+          "net_sales": 73961.44,
+          "net_orders": 1798,
+          "cost": 15950.04,
+          "margin": 0.7862,
+          "asp": 41.2,
+          "refund_rate": 0.0088
         },
         "previous": {
           "orders": 6775,
@@ -26371,14 +26371,14 @@
       },
       "shipping": {
         "current": {
-          "orders": 661,
-          "sales": 26285.62,
+          "orders": 667,
+          "sales": 26772.38,
           "refund": 31.6,
-          "net_sales": 26254.02,
-          "net_orders": 661,
-          "cost": 5621.4,
-          "margin": 0.7861,
-          "asp": 39.77,
+          "net_sales": 26740.78,
+          "net_orders": 667,
+          "cost": 5699.03,
+          "margin": 0.7871,
+          "asp": 40.14,
           "refund_rate": 0.0012
         },
         "previous": {
