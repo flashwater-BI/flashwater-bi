@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-08-04 09:48:03",
+    "generated_at": "2026-08-04 10:45:52",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-08-03"
@@ -10,7 +10,8 @@
     "platforms": [
       "天猫",
       "抖店",
-      "小红书"
+      "小红书",
+      "拼多多"
     ],
     "note": "三维度(付款/净销售/出库)+按退款时间切换。退款计入条件: refund_time IS NOT NULL AND status!=2。前端切换时净销售额跟随重算。"
   },
@@ -7557,23 +7558,23 @@
       "date": "2026-08-04",
       "platform": "天猫",
       "is_bd": false,
-      "orders": 15,
-      "net_orders": 15,
-      "sales": 581.31,
+      "orders": 17,
+      "net_orders": 17,
+      "sales": 683.31,
       "refund": 0.0,
-      "net_sales": 581.31,
-      "cost": 105.21
+      "net_sales": 683.31,
+      "cost": 119.64
     },
     {
       "date": "2026-08-04",
       "platform": "抖店",
       "is_bd": false,
-      "orders": 51,
-      "net_orders": 51,
-      "sales": 1925.0,
+      "orders": 105,
+      "net_orders": 105,
+      "sales": 3979.9,
       "refund": 0.0,
-      "net_sales": 1925.0,
-      "cost": 418.27
+      "net_sales": 3979.9,
+      "cost": 888.42
     },
     {
       "date": "2026-08-04",
@@ -26293,15 +26294,15 @@
       },
       "shipping": {
         "current": {
-          "orders": 1749,
-          "sales": 71974.53,
+          "orders": 1805,
+          "sales": 74131.43,
           "refund": 656.75,
-          "net_sales": 71317.78,
-          "net_orders": 1736,
-          "cost": 15387.83,
-          "margin": 0.7862,
-          "asp": 41.15,
-          "refund_rate": 0.0091
+          "net_sales": 73474.68,
+          "net_orders": 1792,
+          "cost": 15872.41,
+          "margin": 0.7859,
+          "asp": 41.07,
+          "refund_rate": 0.0089
         },
         "previous": {
           "orders": 6775,
@@ -26370,15 +26371,15 @@
       },
       "shipping": {
         "current": {
-          "orders": 605,
-          "sales": 24128.72,
+          "orders": 661,
+          "sales": 26285.62,
           "refund": 31.6,
-          "net_sales": 24097.12,
-          "net_orders": 605,
-          "cost": 5136.82,
-          "margin": 0.7871,
-          "asp": 39.88,
-          "refund_rate": 0.0013
+          "net_sales": 26254.02,
+          "net_orders": 661,
+          "cost": 5621.4,
+          "margin": 0.7861,
+          "asp": 39.77,
+          "refund_rate": 0.0012
         },
         "previous": {
           "orders": 2680,
