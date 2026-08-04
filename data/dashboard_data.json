@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-08-04 11:01:15",
+    "generated_at": "2026-08-04 11:19:05",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-08-03"
@@ -48,7 +48,7 @@
       "platform": "天猫",
       "year": 2026,
       "month": 8,
-      "target_amount": 0.0,
+      "target_amount": 78000.0,
       "target_orders": 0
     },
     {
@@ -83,7 +83,7 @@
       "platform": "抖店",
       "year": 2026,
       "month": 8,
-      "target_amount": 0.0,
+      "target_amount": 182000.0,
       "target_orders": 0
     },
     {
