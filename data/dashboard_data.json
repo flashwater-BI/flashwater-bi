@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-08-10 10:12:46",
+    "generated_at": "2026-08-10 11:00:03",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-08-09"
@@ -8086,23 +8086,23 @@
       "date": "2026-08-10",
       "platform": "天猫",
       "is_bd": false,
-      "orders": 15,
-      "net_orders": 15,
-      "sales": 580.67,
+      "orders": 19,
+      "net_orders": 19,
+      "sales": 829.92,
       "refund": 0.0,
-      "net_sales": 580.67,
-      "cost": 123.2
+      "net_sales": 829.92,
+      "cost": 178.0
     },
     {
       "date": "2026-08-10",
       "platform": "抖店",
       "is_bd": false,
-      "orders": 30,
-      "net_orders": 30,
-      "sales": 1227.0,
+      "orders": 32,
+      "net_orders": 32,
+      "sales": 1358.0,
       "refund": 0.0,
-      "net_sales": 1227.0,
-      "cost": 244.75
+      "net_sales": 1358.0,
+      "cost": 264.11
     },
     {
       "date": "2026-08-10",
@@ -27419,14 +27419,14 @@
       },
       "shipping": {
         "current": {
-          "orders": 4780,
-          "sales": 193270.57,
+          "orders": 4786,
+          "sales": 193650.82,
           "refund": 5103.3,
-          "net_sales": 188167.27,
-          "net_orders": 4705,
-          "cost": 40820.33,
+          "net_sales": 188547.52,
+          "net_orders": 4711,
+          "cost": 40894.49,
           "margin": 0.7888,
-          "asp": 40.43,
+          "asp": 40.46,
           "refund_rate": 0.0264
         },
         "previous": {
@@ -27476,14 +27476,14 @@
       },
       "shipping": {
         "current": {
-          "orders": 47,
-          "sales": 1939.67,
+          "orders": 53,
+          "sales": 2319.92,
           "refund": 0,
-          "net_sales": 1939.67,
-          "net_orders": 47,
-          "cost": 379.95,
-          "margin": 0.8041,
-          "asp": 41.27,
+          "net_sales": 2319.92,
+          "net_orders": 53,
+          "cost": 454.11,
+          "margin": 0.8043,
+          "asp": 43.77,
           "refund_rate": 0.0
         },
         "previous": {
