@@ -32,6 +32,38 @@ log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
 }
 
+# 企微告警推送（失败时调用，无论周几）
+push_wecom_alert() {
+    local ALERT_MSG="$1"
+    local WEBHOOK_FILE="$PROJECT_DIR/data/.webhook"
+    if [ ! -f "$WEBHOOK_FILE" ]; then
+        log "  ⚠ 未配置企微webhook，跳过告警"
+        return 0
+    fi
+    local WEBHOOK_URL=$(cat "$WEBHOOK_FILE")
+    local TMP_JSON="$PROJECT_DIR/tmp/wecom_alert.json"
+    local TMP_JSON_WIN=$(to_win_path "$TMP_JSON")
+    mkdir -p "$PROJECT_DIR/tmp"
+    $PYTHON -c "
+import json
+data = {'msgtype': 'markdown', 'markdown': {'content': '$ALERT_MSG'}}
+with open(r'$TMP_JSON_WIN', 'w', encoding='utf-8') as f:
+    json.dump(data, f, ensure_ascii=False)
+" >> "$LOG_FILE" 2>&1 || true
+    curl -s "$WEBHOOK_URL" -H 'Content-Type: application/json; charset=utf-8' -d "@$TMP_JSON_WIN" >> "$LOG_FILE" 2>&1 || true
+    rm -f "$TMP_JSON"
+    log "  ✓ 失败告警已推送企微"
+}
+
+# 错误处理：任何步骤失败时推送企微告警后退出
+STEP_NAME="初始化"
+on_error() {
+    log "✗ 部署失败: $STEP_NAME"
+    push_wecom_alert "## ⚠️ FlashWater BI 看板部署失败\n> 失败步骤：$STEP_NAME\n> 时间：$(date '+%Y-%m-%d %H:%M')\n> 请检查 deploy.log，修复后手动重跑 scripts/deploy.sh"
+    exit 1
+}
+trap on_error ERR
+
 cd "$PROJECT_DIR"
 
 log "========== FlashWater BI 每日部署开始 =========="
@@ -74,6 +106,7 @@ fi
 # ============================================================
 # Step 1: 增量同步万里牛数据（订单API）
 # ============================================================
+STEP_NAME="同步万里牛订单数据"
 log "[1/7] 同步万里牛订单数据..."
 $PYTHON scripts/sync_incremental.py >> "$LOG_FILE" 2>&1
 log "  ✓ 订单同步完成"
@@ -81,6 +114,7 @@ log "  ✓ 订单同步完成"
 # ============================================================
 # Step 1.5: 同步拼多多出库单（出库单API，拼多多不走订单API）
 # ============================================================
+STEP_NAME="同步拼多多出库单"
 log "[2/7] 同步拼多多出库单..."
 $PYTHON scripts/sync_pdd_outbound.py >> "$LOG_FILE" 2>&1
 log "  ✓ 拼多多同步完成"
@@ -88,6 +122,7 @@ log "  ✓ 拼多多同步完成"
 # ============================================================
 # Step 2: 导出看板数据JSON
 # ============================================================
+STEP_NAME="导出看板数据"
 log "[3/7] 导出看板数据..."
 $PYTHON scripts/export_data.py >> "$LOG_FILE" 2>&1
 log "  ✓ 数据导出完成"
@@ -95,6 +130,7 @@ log "  ✓ 数据导出完成"
 # ============================================================
 # Step 3: 构建看板HTML（数据注入模板）
 # ============================================================
+STEP_NAME="构建看板HTML"
 log "[4/7] 构建看板HTML..."
 $PYTHON scripts/build_dashboard.py >> "$LOG_FILE" 2>&1
 log "  ✓ 看板构建完成"
@@ -102,6 +138,7 @@ log "  ✓ 看板构建完成"
 # ============================================================
 # Step 4: staticrypt AES-256加密
 # ============================================================
+STEP_NAME="加密看板"
 log "[5/7] 加密看板..."
 BUILD_HTML="$PROJECT_DIR/outputs/dashboard_v3.html"
 ENCRYPT_DIR="$PROJECT_DIR/outputs/encrypted"
@@ -123,6 +160,7 @@ log "  ✓ 加密完成"
 # ============================================================
 # Step 5: 复制到docs目录并推送到GitHub Pages
 # ============================================================
+STEP_NAME="部署到GitHub Pages"
 log "[6/7] 部署到GitHub Pages..."
 
 cp "$ENCRYPT_DIR/dashboard_v3.html" "$PROJECT_DIR/docs/index.html"
@@ -158,8 +196,10 @@ fi
 if [ "$PUSH_EXIT" -ne 0 ]; then
     log "  ⚠ git push 失败 (exit $PUSH_EXIT)，降级到 GitHub API push..."
     # 方案2: 通过 GitHub Contents API 推送（绕过 github.com:443 被墙）
-    $PYTHON scripts/api_push.py docs/index.html data/dashboard_data.json data/dimension_data.json >> "$LOG_FILE" 2>&1
-    API_EXIT=$?
+    # 注意: || 捕获退出码，避免 set -e 直接终止脚本导致跳过企微告警
+    STEP_NAME="GitHub API push 降级推送"
+    API_EXIT=0
+    $PYTHON scripts/api_push.py docs/index.html data/dashboard_data.json data/dimension_data.json >> "$LOG_FILE" 2>&1 || API_EXIT=$?
     if [ "$API_EXIT" -eq 0 ]; then
         log "  ✓ API push 完成"
         PUSH_SUCCESS=1
@@ -168,7 +208,7 @@ if [ "$PUSH_EXIT" -ne 0 ]; then
         git checkout -- docs/index.html data/dashboard_data.json data/dimension_data.json >> "$LOG_FILE" 2>&1 || true
     else
         log "  ✗ API push 也失败了"
-        exit 1
+        on_error  # 推送失败告警并退出
     fi
 else
     log "  ✓ git push 完成"
@@ -178,6 +218,7 @@ fi
 # ============================================================
 # Step 6: 周一推送访问地址和本周密码到企微群
 # ============================================================
+STEP_NAME="推送企微群消息"
 WEBHOOK_FILE="$PROJECT_DIR/data/.webhook"
 if [ "$WEEKDAY" = "1" ] && [ -f "$WEBHOOK_FILE" ]; then
     log "[7/7] 推送企微群消息..."
@@ -196,17 +237,17 @@ data = {
 }
 with open(r'$TMP_JSON_WIN', 'w', encoding='utf-8') as f:
     json.dump(data, f, ensure_ascii=False)
-" >> "$LOG_FILE" 2>&1
+" >> "$LOG_FILE" 2>&1 || true
     curl -s "$WEBHOOK_URL" \
         -H 'Content-Type: application/json; charset=utf-8' \
         -d "@$TMP_JSON_WIN" \
-        >> "$LOG_FILE" 2>&1
+        >> "$LOG_FILE" 2>&1 || true
     rm -f "$TMP_JSON"
     log "  ✓ 企微群消息已推送"
 elif [ "$WEEKDAY" = "1" ]; then
     log "[7/7] ⚠ 今天是周一但未配置企微webhook (data/.webhook)，跳过推送"
 fi
-# 非周一不做任何推送
+# 非周一不做任何推送（失败告警由 trap on_error 处理，不受此限制）
 
 # ============================================================
 # 完成
