@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-09-07 10:04:27",
+    "generated_at": "2026-09-07 11:02:41",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-09-06"
@@ -52,6 +52,13 @@
       "target_orders": 0
     },
     {
+      "platform": "天猫",
+      "year": 2026,
+      "month": 9,
+      "target_amount": 80000.0,
+      "target_orders": 0
+    },
+    {
       "platform": "抖店",
       "year": 2026,
       "month": 4,
@@ -87,6 +94,13 @@
       "target_orders": 0
     },
     {
+      "platform": "抖店",
+      "year": 2026,
+      "month": 9,
+      "target_amount": 210000.0,
+      "target_orders": 0
+    },
+    {
       "platform": "小红书",
       "year": 2026,
       "month": 5,
@@ -112,6 +126,20 @@
       "year": 2026,
       "month": 8,
       "target_amount": 0.0,
+      "target_orders": 0
+    },
+    {
+      "platform": "小红书",
+      "year": 2026,
+      "month": 9,
+      "target_amount": 0.0,
+      "target_orders": 0
+    },
+    {
+      "platform": "拼多多",
+      "year": 2026,
+      "month": 9,
+      "target_amount": 20000.0,
       "target_orders": 0
     }
   ],
