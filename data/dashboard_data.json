@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-10-15 07:52:47",
+    "generated_at": "2026-10-15 17:46:28",
     "data_range": {
       "from": "2026-04-17",
       "to": "2026-10-14"
@@ -13708,6 +13708,28 @@
       "refund": 0.0,
       "net_sales": 640.0,
       "cost": 198.7
+    },
+    {
+      "date": "2026-10-15",
+      "platform": "天猫",
+      "is_bd": false,
+      "orders": 7,
+      "net_orders": 7,
+      "sales": 277.47,
+      "refund": 0.0,
+      "net_sales": 277.47,
+      "cost": 53.06
+    },
+    {
+      "date": "2026-10-15",
+      "platform": "抖店",
+      "is_bd": false,
+      "orders": 20,
+      "net_orders": 20,
+      "sales": 834.0,
+      "refund": 0.0,
+      "net_sales": 834.0,
+      "cost": 158.45
     }
   ],
   "refund_daily": [
@@ -39093,15 +39115,15 @@
       },
       "shipping": {
         "current": {
-          "orders": 2131,
-          "sales": 91607.83,
+          "orders": 2158,
+          "sales": 92719.3,
           "refund": 3511.42,
-          "net_sales": 88096.41,
-          "net_orders": 2093,
-          "cost": 18619.59,
-          "margin": 0.7967,
-          "asp": 42.99,
-          "refund_rate": 0.0383
+          "net_sales": 89207.88,
+          "net_orders": 2120,
+          "cost": 18831.1,
+          "margin": 0.7969,
+          "asp": 42.97,
+          "refund_rate": 0.0379
         },
         "previous": {
           "orders": 7970,
@@ -39170,15 +39192,15 @@
       },
       "shipping": {
         "current": {
-          "orders": 349,
-          "sales": 14801.23,
+          "orders": 376,
+          "sales": 15912.7,
           "refund": 77.69,
-          "net_sales": 14723.54,
-          "net_orders": 347,
-          "cost": 3042.37,
-          "margin": 0.7945,
-          "asp": 42.41,
-          "refund_rate": 0.0052
+          "net_sales": 15835.01,
+          "net_orders": 374,
+          "cost": 3253.88,
+          "margin": 0.7955,
+          "asp": 42.32,
+          "refund_rate": 0.0049
         },
         "previous": {
           "orders": 1085,
