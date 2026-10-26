@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26 09:47:44",
+  "generated_at": "2026-10-26 09:54:48",
   "products": [
     {
       "sku_code": "1002",
@@ -324,11 +324,11 @@
       "goods_code": "1005",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 195.0,
-      "lock_size": 6.0,
+      "quantity": 193.0,
+      "lock_size": 4.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 924.7771,
+      "cost_total": 915.2923,
       "unit_cost": 4.75
     },
     {
@@ -384,11 +384,11 @@
       "goods_code": "1002",
       "spec_name": "FW清舒护龈漱口水500ml",
       "warehouse_code": "001",
-      "quantity": 2468.0,
-      "lock_size": 26.0,
+      "quantity": 2467.0,
+      "lock_size": 25.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 16904.2585,
+      "cost_total": 16897.4091,
       "unit_cost": 6.85
     },
     {
@@ -468,11 +468,11 @@
       "goods_code": "1006",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 9002.0,
-      "lock_size": 50.0,
+      "quantity": 8994.0,
+      "lock_size": 43.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 25475.4175,
+      "cost_total": 25452.7775,
       "unit_cost": 2.83
     },
     {
@@ -540,11 +540,11 @@
       "goods_code": "6f00029",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 3253.0,
-      "lock_size": 11.0,
+      "quantity": 3250.0,
+      "lock_size": 8.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 650.6,
+      "cost_total": 650.0,
       "unit_cost": 0.2
     },
     {
@@ -576,11 +576,11 @@
       "goods_code": "1001",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 6613.0,
-      "lock_size": 27.0,
+      "quantity": 6608.0,
+      "lock_size": 23.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 31411.6501,
+      "cost_total": 31387.9001,
       "unit_cost": 4.75
     }
   ],
@@ -588,7 +588,7 @@
     "carriers": [
       {
         "name": "申通",
-        "orders": 28590,
+        "orders": 28591,
         "shops": 4
       },
       {
@@ -640,8 +640,8 @@
       },
       {
         "province": "河南省",
-        "orders": 1753,
-        "sales": 61811.74
+        "orders": 1754,
+        "sales": 61932.74
       },
       {
         "province": "四川省",
@@ -1457,7 +1457,7 @@
       },
       {
         "date": "2026-10-26",
-        "orders": 24,
+        "orders": 25,
         "carriers": 2
       }
     ],
@@ -3865,7 +3865,7 @@
       {
         "date": "2026-10-26",
         "name": "申通",
-        "orders": 23
+        "orders": 24
       },
       {
         "date": "2026-10-26",
@@ -28039,8 +28039,8 @@
       {
         "date": "2026-10-26",
         "province": "河南省",
-        "orders": 3,
-        "sales": 99.0
+        "orders": 4,
+        "sales": 220.0
       },
       {
         "date": "2026-10-26",
