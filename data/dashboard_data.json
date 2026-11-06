@@ -1,10 +1,10 @@
 {
   "meta": {
     "version": "v23",
-    "generated_at": "2026-11-05 13:54:47",
+    "generated_at": "2026-11-06 09:54:05",
     "data_range": {
       "from": "2026-04-17",
-      "to": "2026-11-04"
+      "to": "2026-11-05"
     },
     "current_month": "2026-11",
     "platforms": [
@@ -7167,11 +7167,11 @@
       "platform": "抖店",
       "is_bd": false,
       "orders": 70,
-      "net_orders": 68,
+      "net_orders": 67,
       "sales": 3202.5,
-      "refund": 565.76,
-      "net_sales": 2636.74,
-      "cost": 654.35
+      "refund": 595.76,
+      "net_sales": 2606.74,
+      "cost": 646.77
     },
     {
       "date": "2026-10-21",
@@ -7301,8 +7301,8 @@
       "orders": 72,
       "net_orders": 69,
       "sales": 3013.0,
-      "refund": 561.44,
-      "net_sales": 2451.56,
+      "refund": 566.44,
+      "net_sales": 2446.56,
       "cost": 609.42
     },
     {
@@ -7497,11 +7497,11 @@
       "platform": "抖店",
       "is_bd": false,
       "orders": 59,
-      "net_orders": 57,
+      "net_orders": 55,
       "sales": 2359.8,
-      "refund": 304.39,
-      "net_sales": 2055.41,
-      "cost": 461.51
+      "refund": 372.39,
+      "net_sales": 1987.41,
+      "cost": 446.35
     },
     {
       "date": "2026-10-31",
@@ -7521,8 +7521,8 @@
       "orders": 47,
       "net_orders": 30,
       "sales": 2389.48,
-      "refund": 875.14,
-      "net_sales": 1514.34,
+      "refund": 880.75,
+      "net_sales": 1508.73,
       "cost": 279.73
     },
     {
@@ -7532,8 +7532,8 @@
       "orders": 91,
       "net_orders": 91,
       "sales": 3950.5,
-      "refund": 750.72,
-      "net_sales": 3199.78,
+      "refund": 755.72,
+      "net_sales": 3194.78,
       "cost": 771.88
     },
     {
@@ -7565,8 +7565,8 @@
       "orders": 70,
       "net_orders": 67,
       "sales": 2808.0,
-      "refund": 136.0,
-      "net_sales": 2672.0,
+      "refund": 141.0,
+      "net_sales": 2667.0,
       "cost": 554.89
     },
     {
@@ -7585,22 +7585,22 @@
       "platform": "天猫",
       "is_bd": false,
       "orders": 39,
-      "net_orders": 27,
+      "net_orders": 26,
       "sales": 1529.75,
-      "refund": 393.5,
-      "net_sales": 1136.25,
-      "cost": 232.33
+      "refund": 448.26,
+      "net_sales": 1081.49,
+      "cost": 224.75
     },
     {
       "date": "2026-11-03",
       "platform": "抖店",
       "is_bd": false,
       "orders": 64,
-      "net_orders": 63,
+      "net_orders": 62,
       "sales": 2688.9,
-      "refund": 250.82,
-      "net_sales": 2438.08,
-      "cost": 518.08
+      "refund": 285.82,
+      "net_sales": 2403.08,
+      "cost": 510.5
     },
     {
       "date": "2026-11-03",
@@ -7645,6 +7645,39 @@
       "refund": 0.0,
       "net_sales": 439.2,
       "cost": 136.46
+    },
+    {
+      "date": "2026-11-05",
+      "platform": "天猫",
+      "is_bd": false,
+      "orders": 34,
+      "net_orders": 21,
+      "sales": 1618.9,
+      "refund": 477.84,
+      "net_sales": 1141.06,
+      "cost": 211.05
+    },
+    {
+      "date": "2026-11-05",
+      "platform": "抖店",
+      "is_bd": false,
+      "orders": 60,
+      "net_orders": 59,
+      "sales": 2367.8,
+      "refund": 54.0,
+      "net_sales": 2313.8,
+      "cost": 481.37
+    },
+    {
+      "date": "2026-11-05",
+      "platform": "拼多多",
+      "is_bd": false,
+      "orders": 24,
+      "net_orders": 24,
+      "sales": 657.8,
+      "refund": 0.0,
+      "net_sales": 657.8,
+      "cost": 186.17
     }
   ],
   "shipping_daily": [
@@ -14649,11 +14682,11 @@
       "platform": "抖店",
       "is_bd": false,
       "orders": 41,
-      "net_orders": 40,
+      "net_orders": 39,
       "sales": 1443.2,
-      "refund": 85.0,
-      "net_sales": 1358.2,
-      "cost": 329.98
+      "refund": 115.0,
+      "net_sales": 1328.2,
+      "cost": 322.4
     },
     {
       "date": "2026-10-22",
@@ -14783,8 +14816,8 @@
       "orders": 69,
       "net_orders": 67,
       "sales": 2725.0,
-      "refund": 129.0,
-      "net_sales": 2596.0,
+      "refund": 134.0,
+      "net_sales": 2591.0,
       "cost": 556.81
     },
     {
@@ -14946,11 +14979,11 @@
       "platform": "抖店",
       "is_bd": false,
       "orders": 51,
-      "net_orders": 51,
+      "net_orders": 50,
       "sales": 1956.7,
-      "refund": 40.0,
-      "net_sales": 1916.7,
-      "cost": 420.28
+      "refund": 74.0,
+      "net_sales": 1882.7,
+      "cost": 412.7
     },
     {
       "date": "2026-10-31",
@@ -14979,11 +15012,11 @@
       "platform": "抖店",
       "is_bd": false,
       "orders": 65,
-      "net_orders": 65,
+      "net_orders": 64,
       "sales": 2609.9,
-      "refund": 25.0,
-      "net_sales": 2584.9,
-      "cost": 535.45
+      "refund": 64.0,
+      "net_sales": 2545.9,
+      "cost": 527.87
     },
     {
       "date": "2026-11-01",
@@ -15003,8 +15036,8 @@
       "orders": 36,
       "net_orders": 34,
       "sales": 2038.7,
-      "refund": 92.3,
-      "net_sales": 1946.4,
+      "refund": 97.91,
+      "net_sales": 1940.79,
       "cost": 365.03
     },
     {
@@ -15014,8 +15047,8 @@
       "orders": 78,
       "net_orders": 76,
       "sales": 3018.6,
-      "refund": 60.0,
-      "net_sales": 2958.6,
+      "refund": 65.0,
+      "net_sales": 2953.6,
       "cost": 586.3
     },
     {
@@ -15034,22 +15067,22 @@
       "platform": "天猫",
       "is_bd": false,
       "orders": 27,
-      "net_orders": 27,
+      "net_orders": 26,
       "sales": 1164.82,
-      "refund": 0.0,
-      "net_sales": 1164.82,
-      "cost": 222.65
+      "refund": 40.44,
+      "net_sales": 1124.38,
+      "cost": 215.07
     },
     {
       "date": "2026-11-03",
       "platform": "抖店",
       "is_bd": false,
       "orders": 51,
-      "net_orders": 51,
+      "net_orders": 50,
       "sales": 2188.0,
-      "refund": 84.34,
-      "net_sales": 2103.66,
-      "cost": 433.61
+      "refund": 114.34,
+      "net_sales": 2073.66,
+      "cost": 426.03
     },
     {
       "date": "2026-11-03",
@@ -15069,8 +15102,8 @@
       "orders": 25,
       "net_orders": 25,
       "sales": 1215.25,
-      "refund": 0.0,
-      "net_sales": 1215.25,
+      "refund": 14.32,
+      "net_sales": 1200.93,
       "cost": 240.55
     },
     {
@@ -15080,8 +15113,8 @@
       "orders": 60,
       "net_orders": 60,
       "sales": 2275.6,
-      "refund": 0.0,
-      "net_sales": 2275.6,
+      "refund": 5.0,
+      "net_sales": 2270.6,
       "cost": 483.38
     },
     {
@@ -15099,23 +15132,56 @@
       "date": "2026-11-05",
       "platform": "天猫",
       "is_bd": false,
-      "orders": 10,
-      "net_orders": 10,
-      "sales": 596.74,
+      "orders": 21,
+      "net_orders": 21,
+      "sales": 1144.77,
       "refund": 0.0,
-      "net_sales": 596.74,
-      "cost": 104.75
+      "net_sales": 1144.77,
+      "cost": 206.85
     },
     {
       "date": "2026-11-05",
       "platform": "抖店",
       "is_bd": false,
-      "orders": 21,
-      "net_orders": 21,
-      "sales": 728.9,
+      "orders": 61,
+      "net_orders": 61,
+      "sales": 2308.8,
       "refund": 15.06,
-      "net_sales": 713.84,
-      "cost": 166.03
+      "net_sales": 2293.74,
+      "cost": 490.23
+    },
+    {
+      "date": "2026-11-05",
+      "platform": "拼多多",
+      "is_bd": false,
+      "orders": 24,
+      "net_orders": 24,
+      "sales": 657.8,
+      "refund": 0.0,
+      "net_sales": 657.8,
+      "cost": 186.17
+    },
+    {
+      "date": "2026-11-06",
+      "platform": "天猫",
+      "is_bd": false,
+      "orders": 10,
+      "net_orders": 10,
+      "sales": 593.03,
+      "refund": 0.0,
+      "net_sales": 593.03,
+      "cost": 108.95
+    },
+    {
+      "date": "2026-11-06",
+      "platform": "抖店",
+      "is_bd": false,
+      "orders": 18,
+      "net_orders": 18,
+      "sales": 732.9,
+      "refund": 0.0,
+      "net_sales": 732.9,
+      "cost": 149.59
     }
   ],
   "refund_daily": [
@@ -20674,27 +20740,40 @@
       "date": "2026-11-05",
       "platform": "天猫",
       "is_bd": false,
-      "orders": 3,
-      "net_orders": 3,
-      "sales": 238.38,
-      "refund": 238.38,
-      "net_sales": 238.38,
+      "orders": 21,
+      "net_orders": 21,
+      "sales": 776.59,
+      "refund": 776.59,
+      "net_sales": 776.59,
       "cost": 0,
-      "original_orders": 3,
-      "original_sales": 238.38
+      "original_orders": 21,
+      "original_sales": 923.2
     },
     {
       "date": "2026-11-05",
       "platform": "抖店",
       "is_bd": false,
-      "orders": 1,
-      "net_orders": 1,
-      "sales": 30.0,
-      "refund": 30.0,
-      "net_sales": 30.0,
+      "orders": 7,
+      "net_orders": 7,
+      "sales": 104.0,
+      "refund": 104.0,
+      "net_sales": 104.0,
       "cost": 0,
-      "original_orders": 1,
-      "original_sales": 30.0
+      "original_orders": 7,
+      "original_sales": 245.0
+    },
+    {
+      "date": "2026-11-06",
+      "platform": "抖店",
+      "is_bd": false,
+      "orders": 4,
+      "net_orders": 4,
+      "sales": 128.0,
+      "refund": 128.0,
+      "net_sales": 128.0,
+      "cost": 0,
+      "original_orders": 4,
+      "original_sales": 128.0
     }
   ],
   "product_sales_daily": [
@@ -33185,28 +33264,84 @@
       "qty": 17,
       "sales": 0.0,
       "orders": 17
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW清舒护龈漱口水248ml",
+      "sku_code": "1001",
+      "qty": 74,
+      "sales": 2356.74,
+      "orders": 74
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW清舒护龈漱口水500ml",
+      "sku_code": "1002",
+      "qty": 35,
+      "sales": 1876.31,
+      "orders": 30
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW清润护齿漱口水248ml",
+      "sku_code": "1005",
+      "qty": 13,
+      "sales": 358.92,
+      "orders": 13
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW轻柔舒护漱口水500ml*新",
+      "sku_code": "6f00037",
+      "qty": 2,
+      "sales": 37.42,
+      "orders": 2
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW清润护齿体验包30ml",
+      "sku_code": "1006",
+      "qty": 117,
+      "sales": 27.11,
+      "orders": 117
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW单页卡",
+      "sku_code": "6f00036",
+      "qty": 80,
+      "sales": 0.0,
+      "orders": 80
+    },
+    {
+      "date": "2026-11-05",
+      "item_name": "FW3折页粉卡",
+      "sku_code": "6f00029",
+      "qty": 24,
+      "sales": 0.0,
+      "orders": 24
     }
   ],
   "platform_summary": {
     "天猫": {
-      "sales": 683312.31,
-      "orders": 15330,
-      "refund": 182824.04,
-      "net": 500488.27,
-      "cost": 136518.49,
+      "sales": 684931.21,
+      "orders": 15364,
+      "refund": 183362.25,
+      "net": 501568.96,
+      "cost": 136832.28,
       "bd_count": 233,
       "first_date": "2026-04-17",
-      "last_date": "2026-11-04"
+      "last_date": "2026-11-05"
     },
     "抖店": {
-      "sales": 935533.16,
-      "orders": 24029,
-      "refund": 185097.35,
-      "net": 750435.81,
-      "cost": 203088.11,
+      "sales": 937900.96,
+      "orders": 24089,
+      "refund": 185299.35,
+      "net": 752601.61,
+      "cost": 203577.06,
       "bd_count": 71,
       "first_date": "2026-04-17",
-      "last_date": "2026-11-04"
+      "last_date": "2026-11-05"
     },
     "小红书": {
       "sales": 16475.5,
@@ -33219,22 +33354,22 @@
       "last_date": "2026-10-12"
     },
     "拼多多": {
-      "sales": 85303.15,
-      "orders": 2814,
+      "sales": 85960.95,
+      "orders": 2838,
       "refund": 0.0,
-      "net": 85303.15,
-      "cost": 23296.34,
+      "net": 85960.95,
+      "cost": 23482.51,
       "bd_count": 0,
       "first_date": "2026-08-04",
-      "last_date": "2026-11-04"
+      "last_date": "2026-11-05"
     }
   },
   "total_summary": {
-    "sales": 1720624.12,
-    "orders": 42547,
-    "refund": 369692.06,
-    "net": 1350932.06,
-    "cost": 365294.59
+    "sales": 1725268.62,
+    "orders": 42665,
+    "refund": 370432.27,
+    "net": 1354836.35,
+    "cost": 366283.5
   },
   "dim_products": [
     {
@@ -33560,11 +33695,11 @@
       "goods_code": "1005",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 86.0,
-      "lock_size": 3.0,
+      "quantity": 75.0,
+      "lock_size": 1.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 407.8507,
+      "cost_total": 355.6837,
       "unit_cost": 4.75
     },
     {
@@ -33620,11 +33755,11 @@
       "goods_code": "1002",
       "spec_name": "FW清舒护龈漱口水500ml",
       "warehouse_code": "001",
-      "quantity": 2179.0,
-      "lock_size": 13.0,
+      "quantity": 2149.0,
+      "lock_size": 1.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 14924.7855,
+      "cost_total": 14719.304,
       "unit_cost": 6.85
     },
     {
@@ -33704,11 +33839,11 @@
       "goods_code": "1006",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 8010.0,
-      "lock_size": 39.0,
+      "quantity": 7917.0,
+      "lock_size": 11.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 22668.0578,
+      "cost_total": 22404.8679,
       "unit_cost": 2.83
     },
     {
@@ -33776,11 +33911,11 @@
       "goods_code": "6f00029",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 3100.0,
-      "lock_size": 7.0,
+      "quantity": 3084.0,
+      "lock_size": 2.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 620.0,
+      "cost_total": 616.8,
       "unit_cost": 0.2
     },
     {
@@ -33812,11 +33947,11 @@
       "goods_code": "1001",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 5968.0,
-      "lock_size": 27.0,
+      "quantity": 5908.0,
+      "lock_size": 7.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 28347.9001,
+      "cost_total": 28062.9001,
       "unit_cost": 4.75
     }
   ],
@@ -33824,22 +33959,22 @@
     "carriers": [
       {
         "name": "申通",
-        "orders": 29284,
+        "orders": 29341,
         "shops": 4
       },
       {
         "name": "中通",
-        "orders": 6559,
+        "orders": 6581,
         "shops": 4
       },
       {
         "name": "STO",
-        "orders": 2238,
+        "orders": 2257,
         "shops": 1
       },
       {
         "name": "ZTO",
-        "orders": 576,
+        "orders": 581,
         "shops": 1
       },
       {
@@ -33856,98 +33991,98 @@
     "provinces": [
       {
         "province": "广东省",
-        "orders": 5047,
-        "sales": 197466.93
+        "orders": 5062,
+        "sales": 198052.49
       },
       {
         "province": "浙江省",
-        "orders": 3151,
-        "sales": 122708.94
+        "orders": 3161,
+        "sales": 123066.97
       },
       {
         "province": "江苏省",
-        "orders": 2787,
-        "sales": 107763.74
+        "orders": 2788,
+        "sales": 107873.76
       },
       {
         "province": "山东省",
-        "orders": 2051,
-        "sales": 74445.62
+        "orders": 2058,
+        "sales": 74744.12
       },
       {
         "province": "河南省",
-        "orders": 1787,
-        "sales": 63184.66
+        "orders": 1793,
+        "sales": 63425.66
       },
       {
         "province": "四川省",
-        "orders": 1786,
-        "sales": 70784.03
+        "orders": 1788,
+        "sales": 70829.83
       },
       {
         "province": "福建省",
-        "orders": 1591,
-        "sales": 63448.54
+        "orders": 1600,
+        "sales": 63840.83
       },
       {
         "province": "湖南省",
-        "orders": 1579,
-        "sales": 59945.63
+        "orders": 1586,
+        "sales": 60191.45
       },
       {
         "province": "湖北省",
-        "orders": 1507,
-        "sales": 56677.35
+        "orders": 1511,
+        "sales": 56824.95
       },
       {
         "province": "安徽省",
-        "orders": 1351,
-        "sales": 50699.68
+        "orders": 1353,
+        "sales": 50738.58
       },
       {
         "province": "河北省",
-        "orders": 1335,
-        "sales": 48249.43
+        "orders": 1337,
+        "sales": 48300.43
       },
       {
         "province": "上海",
-        "orders": 1283,
-        "sales": 53664.75
+        "orders": 1288,
+        "sales": 54005.45
       },
       {
         "province": "江西省",
-        "orders": 1135,
-        "sales": 42681.12
+        "orders": 1141,
+        "sales": 42892.12
       },
       {
         "province": "北京",
-        "orders": 1080,
-        "sales": 45844.18
+        "orders": 1084,
+        "sales": 45983.98
       },
       {
         "province": "陕西省",
-        "orders": 978,
-        "sales": 34038.24
+        "orders": 986,
+        "sales": 34339.66
       },
       {
         "province": "广西壮族自治区",
-        "orders": 910,
-        "sales": 34125.96
+        "orders": 913,
+        "sales": 34230.47
       },
       {
         "province": "辽宁省",
-        "orders": 823,
-        "sales": 30783.72
+        "orders": 824,
+        "sales": 30822.72
       },
       {
         "province": "重庆",
-        "orders": 813,
-        "sales": 31057.51
+        "orders": 815,
+        "sales": 31122.51
       },
       {
         "province": "贵州省",
-        "orders": 606,
-        "sales": 22959.37
+        "orders": 607,
+        "sales": 22993.37
       },
       {
         "province": "山西省",
@@ -34743,7 +34878,12 @@
       },
       {
         "date": "2026-11-05",
-        "orders": 31,
+        "orders": 106,
+        "carriers": 4
+      },
+      {
+        "date": "2026-11-06",
+        "orders": 28,
         "carriers": 2
       }
     ],
@@ -37356,12 +37496,32 @@
       {
         "date": "2026-11-05",
         "name": "申通",
-        "orders": 26
+        "orders": 62
       },
       {
         "date": "2026-11-05",
         "name": "中通",
+        "orders": 20
+      },
+      {
+        "date": "2026-11-05",
+        "name": "STO",
+        "orders": 19
+      },
+      {
+        "date": "2026-11-05",
+        "name": "ZTO",
         "orders": 5
+      },
+      {
+        "date": "2026-11-06",
+        "name": "申通",
+        "orders": 21
+      },
+      {
+        "date": "2026-11-06",
+        "name": "中通",
+        "orders": 7
       }
     ],
     "daily_province": [
@@ -62964,56 +63124,122 @@
       {
         "date": "2026-11-05",
         "province": "广东省",
-        "orders": 5,
-        "sales": 211.9
+        "orders": 17,
+        "sales": 688.46
       },
       {
         "date": "2026-11-05",
         "province": "浙江省",
-        "orders": 4,
-        "sales": 161.51
+        "orders": 10,
+        "sales": 348.71
       },
       {
         "date": "2026-11-05",
         "province": "江西省",
-        "orders": 3,
-        "sales": 180.0
-      },
-      {
-        "date": "2026-11-05",
-        "province": "广西壮族自治区",
-        "orders": 2,
-        "sales": 67.38
+        "orders": 7,
+        "sales": 316.0
       },
       {
         "date": "2026-11-05",
         "province": "山东省",
-        "orders": 2,
-        "sales": 143.4
-      },
-      {
-        "date": "2026-11-05",
-        "province": "四川省",
-        "orders": 2,
-        "sales": 64.0
-      },
-      {
-        "date": "2026-11-05",
-        "province": "北京",
-        "orders": 2,
-        "sales": 69.0
-      },
-      {
-        "date": "2026-11-05",
-        "province": "黑龙江省",
-        "orders": 1,
-        "sales": 34.0
+        "orders": 7,
+        "sales": 306.0
       },
       {
         "date": "2026-11-05",
         "province": "福建省",
+        "orders": 6,
+        "sales": 288.91
+      },
+      {
+        "date": "2026-11-05",
+        "province": "湖南省",
+        "orders": 6,
+        "sales": 219.07
+      },
+      {
+        "date": "2026-11-05",
+        "province": "北京",
+        "orders": 6,
+        "sales": 208.8
+      },
+      {
+        "date": "2026-11-05",
+        "province": "陕西省",
+        "orders": 5,
+        "sales": 149.42
+      },
+      {
+        "date": "2026-11-05",
+        "province": "河南省",
+        "orders": 5,
+        "sales": 186.0
+      },
+      {
+        "date": "2026-11-05",
+        "province": "广西壮族自治区",
+        "orders": 5,
+        "sales": 171.89
+      },
+      {
+        "date": "2026-11-05",
+        "province": "湖北省",
+        "orders": 4,
+        "sales": 143.6
+      },
+      {
+        "date": "2026-11-05",
+        "province": "四川省",
+        "orders": 4,
+        "sales": 109.8
+      },
+      {
+        "date": "2026-11-05",
+        "province": "上海",
+        "orders": 4,
+        "sales": 116.28
+      },
+      {
+        "date": "2026-11-05",
+        "province": "黑龙江省",
+        "orders": 3,
+        "sales": 113.6
+      },
+      {
+        "date": "2026-11-05",
+        "province": "安徽省",
+        "orders": 3,
+        "sales": 72.9
+      },
+      {
+        "date": "2026-11-05",
+        "province": "天津",
+        "orders": 3,
+        "sales": 130.31
+      },
+      {
+        "date": "2026-11-05",
+        "province": "河北省",
+        "orders": 2,
+        "sales": 51.0
+      },
+      {
+        "date": "2026-11-05",
+        "province": "重庆",
         "orders": 1,
-        "sales": 28.0
+        "sales": 26.0
+      },
+      {
+        "date": "2026-11-05",
+        "province": "辽宁省",
+        "orders": 1,
+        "sales": 39.0
+      },
+      {
+        "date": "2026-11-05",
+        "province": "贵州省",
+        "orders": 1,
+        "sales": 34.0
       },
       {
         "date": "2026-11-05",
@@ -63023,21 +63249,15 @@
       },
       {
         "date": "2026-11-05",
-        "province": "湖南省",
+        "province": "海南省",
         "orders": 1,
-        "sales": 44.27
+        "sales": 112.8
       },
       {
         "date": "2026-11-05",
-        "province": "湖北省",
+        "province": "江苏省",
         "orders": 1,
-        "sales": 30.0
-      },
-      {
-        "date": "2026-11-05",
-        "province": "河南省",
-        "orders": 1,
-        "sales": 30.0
+        "sales": 110.02
       },
       {
         "date": "2026-11-05",
@@ -63047,27 +63267,87 @@
       },
       {
         "date": "2026-11-05",
-        "province": "安徽省",
-        "orders": 1,
-        "sales": 34.0
-      },
-      {
-        "date": "2026-11-05",
-        "province": "天津",
-        "orders": 1,
-        "sales": 60.0
-      },
-      {
-        "date": "2026-11-05",
         "province": "吉林省",
         "orders": 1,
         "sales": 74.8
       },
       {
         "date": "2026-11-05",
-        "province": "上海",
+        "province": "内蒙古自治区",
         "orders": 1,
-        "sales": 33.38
+        "sales": 34.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "福建省",
+        "orders": 4,
+        "sales": 131.38
+      },
+      {
+        "date": "2026-11-06",
+        "province": "浙江省",
+        "orders": 4,
+        "sales": 170.83
+      },
+      {
+        "date": "2026-11-06",
+        "province": "陕西省",
+        "orders": 3,
+        "sales": 152.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "广东省",
+        "orders": 3,
+        "sales": 109.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "黑龙江省",
+        "orders": 2,
+        "sales": 65.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "湖南省",
+        "orders": 2,
+        "sales": 71.02
+      },
+      {
+        "date": "2026-11-06",
+        "province": "河南省",
+        "orders": 2,
+        "sales": 85.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "江西省",
+        "orders": 2,
+        "sales": 75.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "山东省",
+        "orders": 2,
+        "sales": 135.9
+      },
+      {
+        "date": "2026-11-06",
+        "province": "上海",
+        "orders": 2,
+        "sales": 257.8
+      },
+      {
+        "date": "2026-11-06",
+        "province": "重庆",
+        "orders": 1,
+        "sales": 39.0
+      },
+      {
+        "date": "2026-11-06",
+        "province": "湖北省",
+        "orders": 1,
+        "sales": 34.0
       }
     ]
   },
@@ -63078,74 +63358,74 @@
       "prev_label": "2026-10",
       "payment": {
         "current": {
-          "orders": 516,
-          "sales": 21133.48,
-          "refund": 3510.93,
-          "net_sales": 17622.55,
-          "net_orders": 455,
-          "cost": 3877.72,
-          "margin": 0.8165,
-          "asp": 40.96,
-          "refund_rate": 0.1661
+          "orders": 634,
+          "sales": 25777.98,
+          "refund": 4148.14,
+          "net_sales": 21629.84,
+          "net_orders": 557,
+          "cost": 4741.15,
+          "margin": 0.8161,
+          "asp": 40.66,
+          "refund_rate": 0.1609
         },
         "previous": {
           "orders": 4521,
           "sales": 194263.84,
-          "refund": 28119.76,
-          "net_sales": 166144.08,
-          "net_orders": 4115,
-          "cost": 36663.25,
-          "margin": 0.8113,
+          "refund": 28222.76,
+          "net_sales": 166041.08,
+          "net_orders": 4112,
+          "cost": 36640.51,
+          "margin": 0.8114,
           "asp": 42.97,
-          "refund_rate": 0.1448
+          "refund_rate": 0.1453
         }
       },
       "net_sales": {
         "current": {
-          "orders": 455,
-          "sales": 17622.55,
-          "refund": 1126.6,
-          "net_sales": 17622.55,
-          "net_orders": 455,
-          "cost": 3877.72,
-          "margin": 0.78,
-          "asp": 38.73,
-          "refund_rate": 0.0639
+          "orders": 557,
+          "sales": 21629.84,
+          "refund": 1188.59,
+          "net_sales": 21629.84,
+          "net_orders": 557,
+          "cost": 4741.15,
+          "margin": 0.7808,
+          "asp": 38.83,
+          "refund_rate": 0.055
         },
         "previous": {
-          "orders": 4115,
-          "sales": 166218.98,
-          "refund": 11547.61,
-          "net_sales": 166218.98,
-          "net_orders": 4115,
-          "cost": 36663.25,
+          "orders": 4112,
+          "sales": 166115.98,
+          "refund": 11552.61,
+          "net_sales": 166115.98,
+          "net_orders": 4112,
+          "cost": 36640.51,
           "margin": 0.7794,
-          "asp": 40.39,
+          "asp": 40.4,
           "refund_rate": 0.0695
         }
       },
       "shipping": {
         "current": {
-          "orders": 471,
-          "sales": 19062.99,
-          "refund": 484.92,
-          "net_sales": 18578.07,
-          "net_orders": 465,
-          "cost": 3915.08,
-          "margin": 0.7946,
-          "asp": 40.47,
-          "refund_rate": 0.0254
+          "orders": 574,
+          "sales": 23174.65,
+          "refund": 624.29,
+          "net_sales": 22550.36,
+          "net_orders": 565,
+          "cost": 4763.35,
+          "margin": 0.7945,
+          "asp": 40.37,
+          "refund_rate": 0.0269
         },
         "previous": {
           "orders": 3998,
           "sales": 170086.73,
-          "refund": 7326.58,
-          "net_sales": 162760.15,
-          "net_orders": 3915,
-          "cost": 34725.66,
-          "margin": 0.7958,
+          "refund": 7395.58,
+          "net_sales": 162691.15,
+          "net_orders": 3913,
+          "cost": 34710.5,
+          "margin": 0.7959,
           "asp": 42.54,
-          "refund_rate": 0.0431
+          "refund_rate": 0.0435
         }
       }
     },
@@ -63155,83 +63435,94 @@
       "prev_label": "10/26-11/02",
       "payment": {
         "current": {
-          "orders": 360,
-          "sales": 14341.74,
-          "refund": 1885.07,
-          "net_sales": 12456.67,
-          "net_orders": 316,
-          "cost": 2683.97,
-          "margin": 0.8129,
-          "asp": 39.84,
-          "refund_rate": 0.1314
+          "orders": 478,
+          "sales": 18986.24,
+          "refund": 2511.67,
+          "net_sales": 16474.57,
+          "net_orders": 418,
+          "cost": 3547.4,
+          "margin": 0.8132,
+          "asp": 39.72,
+          "refund_rate": 0.1323
         },
         "previous": {
           "orders": 846,
           "sales": 34135.13,
-          "refund": 5923.97,
-          "net_sales": 28211.16,
-          "net_orders": 737,
-          "cost": 6377.25,
-          "margin": 0.8132,
+          "refund": 6002.58,
+          "net_sales": 28132.55,
+          "net_orders": 735,
+          "cost": 6362.09,
+          "margin": 0.8136,
           "asp": 40.35,
-          "refund_rate": 0.1735
+          "refund_rate": 0.1758
         }
       },
       "net_sales": {
         "current": {
-          "orders": 316,
-          "sales": 12456.67,
-          "refund": 365.88,
-          "net_sales": 12456.67,
-          "net_orders": 316,
-          "cost": 2683.97,
-          "margin": 0.7845,
-          "asp": 39.42,
-          "refund_rate": 0.0294
+          "orders": 418,
+          "sales": 16474.57,
+          "refund": 417.26,
+          "net_sales": 16474.57,
+          "net_orders": 418,
+          "cost": 3547.4,
+          "margin": 0.7847,
+          "asp": 39.41,
+          "refund_rate": 0.0253
         },
         "previous": {
-          "orders": 737,
-          "sales": 28211.16,
-          "refund": 1966.59,
-          "net_sales": 28211.16,
-          "net_orders": 737,
-          "cost": 6377.25,
+          "orders": 735,
+          "sales": 28132.55,
+          "refund": 1977.2,
+          "net_sales": 28132.55,
+          "net_orders": 735,
+          "cost": 6362.09,
           "margin": 0.7739,
           "asp": 38.28,
-          "refund_rate": 0.0697
+          "refund_rate": 0.0703
         }
       },
       "shipping": {
         "current": {
-          "orders": 357,
-          "sales": 14563.77,
-          "refund": 251.7,
-          "net_sales": 14312.07,
-          "net_orders": 353,
-          "cost": 2998.22,
-          "margin": 0.7941,
-          "asp": 40.79,
-          "refund_rate": 0.0173
+          "orders": 460,
+          "sales": 18675.43,
+          "refund": 352.07,
+          "net_sales": 18323.36,
+          "net_orders": 454,
+          "cost": 3854.07,
+          "margin": 0.7936,
+          "asp": 40.6,
+          "refund_rate": 0.0189
         },
         "previous": {
           "orders": 704,
           "sales": 28416.43,
-          "refund": 1235.97,
-          "net_sales": 27180.46,
-          "net_orders": 689,
-          "cost": 5953.96,
-          "margin": 0.7905,
+          "refund": 1313.97,
+          "net_sales": 27102.46,
+          "net_orders": 687,
+          "cost": 5938.8,
+          "margin": 0.791,
           "asp": 40.36,
-          "refund_rate": 0.0435
+          "refund_rate": 0.0462
         }
       }
     },
     "dod": {
       "period": "日环比",
-      "current_label": "2026-11-04",
-      "prev_label": "2026-11-03",
+      "current_label": "2026-11-05",
+      "prev_label": "2026-11-04",
       "payment": {
         "current": {
+          "orders": 118,
+          "sales": 4644.5,
+          "refund": 531.84,
+          "net_sales": 4112.66,
+          "net_orders": 104,
+          "cost": 878.59,
+          "margin": 0.8108,
+          "asp": 39.36,
+          "refund_rate": 0.1145
+        },
+        "previous": {
           "orders": 114,
           "sales": 4435.05,
           "refund": 668.74,
@@ -63241,21 +63532,21 @@
           "margin": 0.8118,
           "asp": 38.9,
           "refund_rate": 0.1508
-        },
-        "previous": {
-          "orders": 117,
-          "sales": 4598.62,
-          "refund": 644.32,
-          "net_sales": 3954.3,
-          "net_orders": 104,
-          "cost": 863.53,
-          "margin": 0.8122,
-          "asp": 39.3,
-          "refund_rate": 0.1401
         }
       },
       "net_sales": {
         "current": {
+          "orders": 104,
+          "sales": 4112.66,
+          "refund": 20.0,
+          "net_sales": 4112.66,
+          "net_orders": 104,
+          "cost": 878.59,
+          "margin": 0.7864,
+          "asp": 39.54,
+          "refund_rate": 0.0049
+        },
+        "previous": {
           "orders": 98,
           "sales": 3766.31,
           "refund": 88.06,
@@ -63265,41 +63556,30 @@
           "margin": 0.7784,
           "asp": 38.43,
           "refund_rate": 0.0234
-        },
-        "previous": {
-          "orders": 104,
-          "sales": 3954.3,
-          "refund": 199.82,
-          "net_sales": 3954.3,
-          "net_orders": 104,
-          "cost": 863.53,
-          "margin": 0.7816,
-          "asp": 38.02,
-          "refund_rate": 0.0505
         }
       },
       "shipping": {
         "current": {
+          "orders": 106,
+          "sales": 4111.37,
+          "refund": 15.06,
+          "net_sales": 4096.31,
+          "net_orders": 106,
+          "cost": 883.25,
+          "margin": 0.7852,
+          "asp": 38.79,
+          "refund_rate": 0.0037
+        },
+        "previous": {
           "orders": 102,
           "sales": 3930.05,
-          "refund": 0,
-          "net_sales": 3930.05,
+          "refund": 19.32,
+          "net_sales": 3910.73,
           "net_orders": 102,
           "cost": 860.39,
           "margin": 0.7811,
           "asp": 38.53,
-          "refund_rate": 0.0
-        },
-        "previous": {
-          "orders": 92,
-          "sales": 3732.79,
-          "refund": 84.34,
-          "net_sales": 3648.45,
-          "net_orders": 92,
-          "cost": 769.38,
-          "margin": 0.7939,
-          "asp": 40.57,
-          "refund_rate": 0.0226
+          "refund_rate": 0.0049
         }
       }
     }
