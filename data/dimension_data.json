@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15 19:27:54",
+  "generated_at": "2026-11-16 09:11:24",
   "products": [
     {
       "sku_code": "1002",
@@ -324,11 +324,11 @@
       "goods_code": "1005",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 155.0,
+      "quantity": 148.0,
       "lock_size": 4.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 736.1042,
+      "cost_total": 702.8605,
       "unit_cost": 4.75
     },
     {
@@ -384,11 +384,11 @@
       "goods_code": "1002",
       "spec_name": "FW清舒护龈漱口水500ml",
       "warehouse_code": "001",
-      "quantity": 1906.0,
-      "lock_size": 3.0,
+      "quantity": 1904.0,
+      "lock_size": 6.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 13054.9032,
+      "cost_total": 13041.2045,
       "unit_cost": 6.85
     },
     {
@@ -468,11 +468,11 @@
       "goods_code": "1006",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 7054.0,
-      "lock_size": 24.0,
+      "quantity": 7021.0,
+      "lock_size": 38.0,
       "underway": 1.0,
       "defect_num": 0.0,
-      "cost_total": 19962.5789,
+      "cost_total": 19869.1889,
       "unit_cost": 2.83
     },
     {
@@ -480,11 +480,11 @@
       "goods_code": "6f00035",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 344.0,
+      "quantity": 339.0,
       "lock_size": 2.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 1135.2,
+      "cost_total": 1118.7,
       "unit_cost": 3.3
     },
     {
@@ -540,11 +540,11 @@
       "goods_code": "6f00029",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 2932.0,
-      "lock_size": 9.0,
+      "quantity": 2925.0,
+      "lock_size": 8.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 586.4,
+      "cost_total": 585.0,
       "unit_cost": 0.2
     },
     {
@@ -576,11 +576,11 @@
       "goods_code": "1001",
       "spec_name": "",
       "warehouse_code": "001",
-      "quantity": 5389.0,
-      "lock_size": 21.0,
+      "quantity": 5366.0,
+      "lock_size": 32.0,
       "underway": 0.0,
       "defect_num": 0.0,
-      "cost_total": 25597.65,
+      "cost_total": 25488.4,
       "unit_cost": 4.75
     }
   ],
@@ -588,22 +588,22 @@
     "carriers": [
       {
         "name": "申通",
-        "orders": 29882,
+        "orders": 29946,
         "shops": 4
       },
       {
         "name": "中通",
-        "orders": 6782,
+        "orders": 6795,
         "shops": 4
       },
       {
         "name": "STO",
-        "orders": 2372,
+        "orders": 2389,
         "shops": 1
       },
       {
         "name": "ZTO",
-        "orders": 611,
+        "orders": 613,
         "shops": 1
       },
       {
@@ -620,103 +620,103 @@
     "provinces": [
       {
         "province": "广东省",
-        "orders": 5183,
-        "sales": 203199.36
+        "orders": 5190,
+        "sales": 203527.16
       },
       {
         "province": "浙江省",
-        "orders": 3241,
-        "sales": 126724.9
+        "orders": 3252,
+        "sales": 127111.8
       },
       {
         "province": "江苏省",
-        "orders": 2850,
-        "sales": 110560.18
+        "orders": 2858,
+        "sales": 110863.27
       },
       {
         "province": "山东省",
-        "orders": 2105,
-        "sales": 76678.04
+        "orders": 2107,
+        "sales": 76754.42
       },
       {
         "province": "四川省",
-        "orders": 1828,
-        "sales": 72730.08
+        "orders": 1829,
+        "sales": 72755.98
       },
       {
         "province": "河南省",
-        "orders": 1822,
-        "sales": 64323.54
+        "orders": 1826,
+        "sales": 64453.44
       },
       {
         "province": "福建省",
-        "orders": 1642,
-        "sales": 65307.17
+        "orders": 1646,
+        "sales": 65585.93
       },
       {
         "province": "湖南省",
-        "orders": 1629,
-        "sales": 61893.45
+        "orders": 1632,
+        "sales": 61982.35
       },
       {
         "province": "湖北省",
-        "orders": 1547,
-        "sales": 58006.3
+        "orders": 1555,
+        "sales": 58308.3
       },
       {
         "province": "安徽省",
-        "orders": 1387,
-        "sales": 51966.59
+        "orders": 1393,
+        "sales": 52153.39
       },
       {
         "province": "河北省",
-        "orders": 1364,
-        "sales": 49440.34
+        "orders": 1369,
+        "sales": 49652.14
       },
       {
         "province": "上海",
-        "orders": 1320,
-        "sales": 55592.42
+        "orders": 1324,
+        "sales": 55824.72
       },
       {
         "province": "江西省",
-        "orders": 1169,
-        "sales": 43853.36
+        "orders": 1175,
+        "sales": 44049.09
       },
       {
         "province": "北京",
-        "orders": 1112,
-        "sales": 47162.73
+        "orders": 1114,
+        "sales": 47198.63
       },
       {
         "province": "陕西省",
-        "orders": 1027,
-        "sales": 35675.66
+        "orders": 1030,
+        "sales": 35742.46
       },
       {
         "province": "广西壮族自治区",
-        "orders": 941,
-        "sales": 35252.15
+        "orders": 944,
+        "sales": 35354.15
       },
       {
         "province": "辽宁省",
-        "orders": 847,
-        "sales": 31660.1
+        "orders": 848,
+        "sales": 31694.1
       },
       {
         "province": "重庆",
-        "orders": 840,
-        "sales": 32078.95
-      },
-      {
-        "province": "贵州省",
-        "orders": 626,
-        "sales": 23808.73
+        "orders": 845,
+        "sales": 32279.53
       },
       {
         "province": "山西省",
-        "orders": 625,
-        "sales": 23240.31
+        "orders": 629,
+        "sales": 23381.31
+      },
+      {
+        "province": "贵州省",
+        "orders": 628,
+        "sales": 23910.73
       }
     ],
     "daily_ship": [
@@ -1557,8 +1557,13 @@
       },
       {
         "date": "2026-11-15",
-        "orders": 30,
-        "carriers": 2
+        "orders": 103,
+        "carriers": 4
+      },
+      {
+        "date": "2026-11-16",
+        "orders": 23,
+        "carriers": 1
       }
     ],
     "daily_carrier": [
@@ -4370,12 +4375,27 @@
       {
         "date": "2026-11-15",
         "name": "申通",
-        "orders": 24
+        "orders": 65
       },
       {
         "date": "2026-11-15",
         "name": "中通",
-        "orders": 6
+        "orders": 19
+      },
+      {
+        "date": "2026-11-15",
+        "name": "STO",
+        "orders": 17
+      },
+      {
+        "date": "2026-11-15",
+        "name": "ZTO",
+        "orders": 2
+      },
+      {
+        "date": "2026-11-16",
+        "name": "申通",
+        "orders": 23
       }
     ],
     "daily_province": [
@@ -31465,33 +31485,99 @@
       },
       {
         "date": "2026-11-15",
-        "province": "陕西省",
-        "orders": 5,
-        "sales": 153.9
-      },
-      {
-        "date": "2026-11-15",
         "province": "浙江省",
-        "orders": 5,
-        "sales": 193.38
+        "orders": 12,
+        "sales": 444.28
       },
       {
         "date": "2026-11-15",
         "province": "广东省",
-        "orders": 3,
-        "sales": 102.0
+        "orders": 10,
+        "sales": 429.8
       },
       {
         "date": "2026-11-15",
-        "province": "黑龙江省",
-        "orders": 2,
-        "sales": 126.0
+        "province": "湖北省",
+        "orders": 8,
+        "sales": 302.0
+      },
+      {
+        "date": "2026-11-15",
+        "province": "陕西省",
+        "orders": 7,
+        "sales": 210.8
+      },
+      {
+        "date": "2026-11-15",
+        "province": "江苏省",
+        "orders": 7,
+        "sales": 266.79
       },
       {
         "date": "2026-11-15",
         "province": "重庆",
-        "orders": 2,
-        "sales": 68.0
+        "orders": 6,
+        "sales": 229.58
+      },
+      {
+        "date": "2026-11-15",
+        "province": "安徽省",
+        "orders": 6,
+        "sales": 181.8
+      },
+      {
+        "date": "2026-11-15",
+        "province": "湖南省",
+        "orders": 5,
+        "sales": 219.9
+      },
+      {
+        "date": "2026-11-15",
+        "province": "河北省",
+        "orders": 5,
+        "sales": 234.28
+      },
+      {
+        "date": "2026-11-15",
+        "province": "河南省",
+        "orders": 4,
+        "sales": 129.9
+      },
+      {
+        "date": "2026-11-15",
+        "province": "江西省",
+        "orders": 4,
+        "sales": 127.73
+      },
+      {
+        "date": "2026-11-15",
+        "province": "山东省",
+        "orders": 4,
+        "sales": 144.38
+      },
+      {
+        "date": "2026-11-15",
+        "province": "上海",
+        "orders": 4,
+        "sales": 232.3
+      },
+      {
+        "date": "2026-11-15",
+        "province": "黑龙江省",
+        "orders": 3,
+        "sales": 160.0
+      },
+      {
+        "date": "2026-11-15",
+        "province": "贵州省",
+        "orders": 3,
+        "sales": 136.0
+      },
+      {
+        "date": "2026-11-15",
+        "province": "福建省",
+        "orders": 3,
+        "sales": 84.76
       },
       {
         "date": "2026-11-15",
@@ -31501,39 +31587,129 @@
       },
       {
         "date": "2026-11-15",
-        "province": "贵州省",
+        "province": "山西省",
         "orders": 2,
-        "sales": 68.0
+        "sales": 73.0
       },
       {
         "date": "2026-11-15",
-        "province": "湖南省",
+        "province": "天津",
         "orders": 2,
-        "sales": 131.0
+        "sales": 78.0
       },
       {
         "date": "2026-11-15",
-        "province": "河北省",
+        "province": "吉林省",
         "orders": 2,
-        "sales": 71.38
+        "sales": 73.0
       },
       {
         "date": "2026-11-15",
-        "province": "江苏省",
-        "orders": 2,
-        "sales": 68.0
+        "province": "新疆维吾尔自治区",
+        "orders": 1,
+        "sales": 9.9
       },
       {
         "date": "2026-11-15",
-        "province": "山东省",
-        "orders": 2,
-        "sales": 68.0
-      },
-      {
-        "date": "2026-11-15",
-        "province": "安徽省",
+        "province": "广西壮族自治区",
         "orders": 1,
         "sales": 34.0
+      },
+      {
+        "date": "2026-11-15",
+        "province": "四川省",
+        "orders": 1,
+        "sales": 25.9
+      },
+      {
+        "date": "2026-11-15",
+        "province": "北京",
+        "orders": 1,
+        "sales": 26.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "浙江省",
+        "orders": 4,
+        "sales": 136.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "江苏省",
+        "orders": 3,
+        "sales": 104.3
+      },
+      {
+        "date": "2026-11-16",
+        "province": "河北省",
+        "orders": 2,
+        "sales": 48.9
+      },
+      {
+        "date": "2026-11-16",
+        "province": "江西省",
+        "orders": 2,
+        "sales": 68.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "广西壮族自治区",
+        "orders": 2,
+        "sales": 68.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "山西省",
+        "orders": 2,
+        "sales": 68.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "陕西省",
+        "orders": 1,
+        "sales": 9.9
+      },
+      {
+        "date": "2026-11-16",
+        "province": "重庆",
+        "orders": 1,
+        "sales": 39.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "辽宁省",
+        "orders": 1,
+        "sales": 34.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "贵州省",
+        "orders": 1,
+        "sales": 34.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "福建省",
+        "orders": 1,
+        "sales": 194.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "安徽省",
+        "orders": 1,
+        "sales": 39.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "吉林省",
+        "orders": 1,
+        "sales": 34.0
+      },
+      {
+        "date": "2026-11-16",
+        "province": "北京",
+        "orders": 1,
+        "sales": 9.9
       }
     ]
   }
